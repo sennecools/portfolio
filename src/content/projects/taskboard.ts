@@ -22,8 +22,8 @@ export const project: ProjectSource = {
   status: { en: "Live, rebuilt in 2026", nl: "Live, herbouwd in 2026" },
   stack: "React · SpacetimeDB",
   links: [
-    { kind: "demo", href: "https://smart-app-project-seven.vercel.app/demo" },
-    { kind: "site", href: "https://smart-app-project-seven.vercel.app/" },
+    { kind: "demo", href: "https://toriboard.sennerd.com/demo" },
+    { kind: "site", href: "https://toriboard.sennerd.com/" },
   ],
   cover: "/projects/taskboard/board.jpg",
   coverAlt: {
