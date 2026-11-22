@@ -18,7 +18,7 @@ const isAnimated = (src: string) => /\.(gif|webp)$/.test(src);
 
 /**
  * The image slideshow at the top of a case study. It advances on its own while nobody is
- * interacting with it; the bar under the active thumbnail shows when the next image comes.
+ * interacting with it; the bar along the bottom of the image shows when the next one comes.
  * The timer is a CSS animation, so pausing is just pausing that animation, and under
  * reduced motion the animation is off and the slides only change by hand.
  */
@@ -102,6 +102,14 @@ export function Showcase({ slides, label, labels, seconds = 6 }: Props) {
         ))}
         {total > 1 && (
           <>
+            <span className="pshow__progress" aria-hidden="true">
+              <span
+                key={index}
+                className="pshow__fill"
+                style={{ animationDuration: `${seconds}s` }}
+                onAnimationEnd={() => go(index + 1)}
+              />
+            </span>
             <button type="button" className="pshow__arrow pshow__arrow--prev" aria-label={labels.previous} onClick={() => go(index - 1)}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
             </button>
@@ -135,16 +143,6 @@ export function Showcase({ slides, label, labels, seconds = 6 }: Props) {
               onClick={() => go(i)}
             >
               <Image src={s.src} alt="" fill sizes="160px" unoptimized={isAnimated(s.src)} />
-              <span className="pshow__bar">
-                {i === index && (
-                  <span
-                    key={index}
-                    className="pshow__fill"
-                    style={{ animationDuration: `${seconds}s` }}
-                    onAnimationEnd={() => go(index + 1)}
-                  />
-                )}
-              </span>
             </button>
           ))}
         </div>

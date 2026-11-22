@@ -19,7 +19,7 @@ export const project: ProjectSource = {
     nl: "Hoofdontwikkelaar, daarna enige developer van de herbouw",
   },
   year: "2025–26",
-  status: { en: "Live, rebuilt in 2026", nl: "Live, herbouwd in 2026" },
+  status: "Live",
   stack: "React · SpacetimeDB",
   links: [
     { kind: "demo", href: "https://toriboard.sennerd.com/demo" },

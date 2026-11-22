@@ -10,6 +10,7 @@ import { idx, rv } from "@/components/rv";
 import { getSiteText, site } from "@/content/site";
 import { isLocale, localePath } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionary";
+import { withLiveStats } from "@/lib/live-stats";
 import { getProjects, groupByPlacement } from "@/lib/projects";
 
 const display = (url: string) => url.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "");
@@ -26,7 +27,7 @@ export default async function HomePage({ params }: Props) {
   const text = getSiteText(locale);
   const to = (p: string) => localePath(locale, p);
 
-  const { featured, strands, index } = groupByPlacement(getProjects(locale));
+  const { featured, strands, index } = groupByPlacement(await withLiveStats(getProjects(locale), locale));
   // The CV links only switch on once the file actually exists in /public.
   const cv = site.links.cv[locale];
   const hasCv = fs.existsSync(path.join(process.cwd(), "public", cv));

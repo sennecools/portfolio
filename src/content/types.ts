@@ -42,6 +42,8 @@ export type ProjectSource = {
   placement: "featured" | "strand" | "index";
   /** First link is the primary action. */
   links: { kind: LinkKind; href: string }[];
+  /** Modrinth project slug: "{downloads}" in the text is filled with its live download count. */
+  modrinth?: string;
   /** Image in /public, e.g. "/projects/packctl/cover.png". An orange plate is shown until it exists. */
   cover?: string;
   coverAlt?: Localized<string>;
@@ -73,6 +75,7 @@ export type Project = {
   status: string;
   stack: string;
   placement: ProjectSource["placement"];
+  modrinth?: string;
   links: ProjectLink[];
   cover?: string;
   coverAlt?: string;

@@ -18,6 +18,7 @@ export function localizeProject(p: ProjectSource, locale: Locale): Project {
     status: pick(p.status, locale),
     stack: p.stack,
     placement: p.placement,
+    modrinth: p.modrinth,
     links: p.links.map((l) => ({ label: linkLabels[l.kind], href: l.href })),
     cover: p.cover,
     coverAlt: p.coverAlt?.[locale],

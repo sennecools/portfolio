@@ -22,7 +22,7 @@ export const content = [
       projects: "Projecten",
       education: "Opleiding",
     },
-    contact: [...contact, { text: "Heist-op-den-Berg" }],
+    contact: [...contact, { text: "Regio Mechelen" }],
     availability: "15 februari – 27 mei 2027, maandag tot donderdag ter plaatse, regio Mechelen.",
     intro:
       "Ik bouw webapps en de tools eromheen. Als enige developer bouwde ik het rekruteringssysteem en de website van een Belgisch rekrutatiebureau, die vandaag in gebruik zijn. Daarnaast schrijf ik servertools en mods voor de Minecraft-servers die ik draai. Nu zoek ik een stage in een team waar ik aan echte systemen werk.",
@@ -81,7 +81,7 @@ export const content = [
       projects: "Projects",
       education: "Education",
     },
-    contact: [...contact, { text: "Heist-op-den-Berg, Belgium" }],
+    contact: [...contact, { text: "Mechelen area, Belgium" }],
     availability: "15 February – 27 May 2027, Monday to Thursday on site, around Mechelen.",
     intro:
       "I build web apps and the tools around them. As the only developer, I built the applicant tracking system and website of a Belgian recruitment agency, both in use today. I also write server tools and mods for the Minecraft servers I run. Now I’m looking for an internship in a team where I work on real systems.",

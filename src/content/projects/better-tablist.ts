@@ -6,8 +6,8 @@ export const project: ProjectSource = {
   category: { en: "Source available", nl: "Broncode beschikbaar" },
   kind: { en: "Minecraft server mod", nl: "Minecraft-servermod" },
   summary: {
-    en: "A Minecraft server mod that lets server owners design the player list. About 10,000 downloads on Modrinth.",
-    nl: "Een Minecraft-servermod waarmee servereigenaars de spelerslijst zelf vormgeven. Ongeveer 10.000 downloads op Modrinth.",
+    en: "A Minecraft server mod that lets server owners design the player list. {downloads} downloads on Modrinth.",
+    nl: "Een Minecraft-servermod waarmee servereigenaars de spelerslijst zelf vormgeven. {downloads} downloads op Modrinth.",
   },
   intro: {
     en: "Better TabList lets Minecraft server owners design the player list you see when you hold Tab: animated headers and footers, rank prefixes, AFK markers and live server statistics.",
@@ -15,7 +15,8 @@ export const project: ProjectSource = {
   },
   role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2025–26",
-  status: "v1.7 · ~10,000 downloads",
+  status: { en: "{downloads} downloads", nl: "{downloads} downloads" },
+  modrinth: "better-tablist",
   stack: "Java · NeoForge · Fabric",
   placement: "strand",
   links: [

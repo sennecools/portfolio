@@ -17,7 +17,7 @@ export const project: ProjectSource = {
   },
   role: { en: "Full-stack developer · freelance", nl: "Full-stack developer · freelance" },
   year: "2025–26",
-  status: { en: "Live, 840+ commits", nl: "In gebruik, 840+ commits" },
+  status: { en: "Live", nl: "In gebruik" },
   stack: "Next.js · TypeScript · PostgreSQL",
   placement: "featured",
   links: [],

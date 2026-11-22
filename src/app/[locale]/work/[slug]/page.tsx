@@ -11,6 +11,7 @@ import { isLocale, localePath, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionary";
 import { alternates } from "@/i18n/metadata";
 import { publicImageSize } from "@/lib/image-size";
+import { withLiveStats } from "@/lib/live-stats";
 import { getNextProject, getProject, getProjects } from "@/lib/projects";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -24,7 +25,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const project = getProject(slug, locale);
+  const found = getProject(slug, locale);
+  if (!found) return {};
+  const [project] = await withLiveStats([found], locale);
   if (!project) return {};
   return {
     title: project.title,
@@ -39,7 +42,9 @@ const Paragraphs = ({ items }: { items: string[] }) => items.map((t) => <p key={
 export default async function ProjectPage({ params }: Props) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const project = getProject(slug, locale);
+  const found = getProject(slug, locale);
+  if (!found) notFound();
+  const [project] = await withLiveStats([found], locale);
   if (!project) notFound();
   const t = getDictionary(locale);
   const next = getNextProject(project.slug, getProjects(locale));
@@ -55,7 +60,6 @@ export default async function ProjectPage({ params }: Props) {
     { label: t.facts.role, value: project.role },
     { label: t.facts.year, value: project.year },
     { label: t.facts.status, value: project.status },
-    { label: t.facts.stack, value: project.stack },
   ];
 
   return (

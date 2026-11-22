@@ -43,7 +43,7 @@ type SiteText = {
 
 const siteText: Localized<SiteText> = {
   en: {
-    location: "Heist-op-den-Berg, Belgium",
+    location: "Belgium",
     description:
       "Senne Cools is a full-stack developer and Applied Computer Science student in Belgium, building web apps, server tooling and self-hosted infrastructure.",
     hero: {
@@ -54,28 +54,30 @@ const siteText: Localized<SiteText> = {
     },
     glance: [
       { label: "Studying", value: "Applied CS · Odisee" },
-      { label: "Looking for", value: "Internship · Feb–May 2027" },
-      { label: "Based in", value: "Heist o/d Berg" },
+      { label: "Focus", value: "Full-stack · Systems" },
+      { label: "Based in", value: "Belgium" },
       { label: "Languages", value: "Dutch · English" },
     ],
     about: {
-      lead: "I like building the tools around a product as much as the product itself: the CLI that makes an update safe, the mod that shows what a server is doing, the site that explains it all.",
-      text: "Most of what I build starts with Sen’s Network, the modded Minecraft servers I run. That is where the update tool in Rust and the tab-list mod, now at about 10,000 downloads, came from. Next I want an internship where I can work on real systems with people who know more than I do.",
+      lead: "I build software people rely on every day, and I want to understand it all the way down.",
+      text: "My biggest project is the applicant tracking system of Beyond Talent, which I took from first sketch to production and still run. Alongside it I build things I want to get to the bottom of: a 3D renderer for the GPU, a game engine in Rust and a Minecraft mod with more than 10,000 downloads.",
       photoAlt: "Senne Cools leaning on a snowy railing at a mountain viewpoint, with clouds behind him.",
       facts: [
         { label: "Studying", value: "Applied Computer Science, Odisee, graduating 2027" },
-        { label: "Works with", value: "TypeScript · React · Rust · Java · Linux" },
+        { label: "Code", value: "TypeScript, Rust, Java, Python" },
+        { label: "Web", value: "React, Next.js, PostgreSQL" },
+        { label: "Systems", value: "Linux, Docker, Vercel, Cloudflare" },
       ],
     },
     contact: {
-      text: "I’m looking for an internship from 15 February to 27 May 2027, Monday to Thursday on site, around Mechelen and Heist-op-den-Berg. Have an opening, or a question about something I built? Write to me in Dutch or English. I usually reply within a few days.",
+      text: "A question about something I built, a project, or an opening in your team? Write to me in Dutch or English. I usually reply within a few days.",
     },
     blog: {
       intro: "Project updates, things I learned and the decisions behind them.",
     },
   },
   nl: {
-    location: "Heist-op-den-Berg, België",
+    location: "België",
     description:
       "Senne Cools is full-stack developer en student Toegepaste Informatica in België. Hij bouwt webapps, servertools en zelfgehoste infrastructuur.",
     hero: {
@@ -86,21 +88,23 @@ const siteText: Localized<SiteText> = {
     },
     glance: [
       { label: "Studie", value: "Toegepaste Informatica · Odisee" },
-      { label: "Op zoek naar", value: "Stage · feb–mei 2027" },
-      { label: "Woont in", value: "Heist o/d Berg" },
+      { label: "Focus", value: "Full-stack · Systemen" },
+      { label: "Woont in", value: "België" },
       { label: "Talen", value: "Nederlands · Engels" },
     ],
     about: {
-      lead: "Ik bouw de tools rond een product even graag als het product zelf: de CLI die een update veilig maakt, de mod die toont wat een server doet, de site die alles uitlegt.",
-      text: "Veel van wat ik bouw begint bij Sen’s Network, de modded Minecraft-servers die ik draai. Daar kwamen de updatetool in Rust en de spelerslijst-mod vandaan, die intussen zo’n 10.000 downloads heeft. Nu zoek ik een stage waar ik aan echte systemen werk, met mensen die meer weten dan ik.",
+      lead: "Ik bouw software waar mensen elke dag op rekenen, en ik wil begrijpen hoe ze tot onderaan werkt.",
+      text: "Mijn grootste project is het rekruteringssysteem van Beyond Talent, dat ik van eerste schets tot productie bracht en nog altijd beheer. Daarnaast bouw ik dingen die ik tot op de bodem wil begrijpen: een 3D-renderer voor de GPU, een game-engine in Rust en een Minecraft-mod met meer dan 10.000 downloads.",
       photoAlt: "Senne Cools leunend op een besneeuwde reling op een uitkijkpunt in de bergen, met wolken achter hem.",
       facts: [
         { label: "Studie", value: "Toegepaste Informatica, Odisee, afstuderen in 2027" },
-        { label: "Werkt met", value: "TypeScript · React · Rust · Java · Linux" },
+        { label: "Code", value: "TypeScript, Rust, Java, Python" },
+        { label: "Web", value: "React, Next.js, PostgreSQL" },
+        { label: "Systemen", value: "Linux, Docker, Vercel, Cloudflare" },
       ],
     },
     contact: {
-      text: "Ik zoek een stage van 15 februari tot 27 mei 2027, van maandag tot donderdag ter plaatse, in de regio Mechelen en Heist-op-den-Berg. Heb je een stageplaats, of een vraag over iets wat ik bouwde? Schrijf me in het Nederlands of Engels. Meestal antwoord ik binnen een paar dagen.",
+      text: "Een vraag over iets wat ik bouwde, een project, of een plaats in je team? Schrijf me in het Nederlands of Engels. Meestal antwoord ik binnen een paar dagen.",
     },
     blog: {
       intro: "Projectupdates, wat ik leerde en de keuzes erachter.",

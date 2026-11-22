@@ -15,7 +15,7 @@ export const project: ProjectSource = {
   },
   role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2026",
-  status: { en: "Pre-1.0 · v0.1.0 released, MIT", nl: "Pre-1.0 · v0.1.0 uitgebracht, MIT" },
+  status: { en: "First release", nl: "Eerste release" },
   stack: "Rust",
   placement: "index",
   links: [

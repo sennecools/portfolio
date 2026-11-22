@@ -15,7 +15,7 @@ export const project: ProjectSource = {
   },
   role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2026",
-  status: { en: "Early development, MIT", nl: "Vroege ontwikkeling, MIT" },
+  status: { en: "In development", nl: "In ontwikkeling" },
   stack: "Python · PyTorch",
   placement: "strand",
   links: [{ kind: "source", href: "https://github.com/sennecools/diffrast" }],
