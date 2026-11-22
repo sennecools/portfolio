@@ -23,6 +23,7 @@ export const project: ProjectSource = {
     { kind: "source", href: "https://github.com/sennecools/Better-TabList" },
   ],
   cover: "/projects/better-tablist/cover.png",
+  coverCaption: { en: "The tab list in game, with ranks, ping and live server stats.", nl: "De spelerslijst in de game, met rangen, ping en live serverstatistieken." },
   coverAlt: {
     en: "In-game Minecraft tab list with a Season 3 header, ranked player names with ping, and a footer showing players, TPS and MSPT.",
     nl: "Minecraft-spelerslijst in de game met een Season 3-kop, spelersnamen met rang en ping, en een voettekst met spelers, TPS en MSPT.",

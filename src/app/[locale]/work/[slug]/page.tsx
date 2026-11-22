@@ -10,6 +10,7 @@ import { projects } from "@/content/projects";
 import { isLocale, localePath, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionary";
 import { alternates } from "@/i18n/metadata";
+import { publicImageSize } from "@/lib/image-size";
 import { getNextProject, getProject, getProjects } from "@/lib/projects";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -44,10 +45,11 @@ export default async function ProjectPage({ params }: Props) {
   const next = getNextProject(project.slug, getProjects(locale));
   const [primary, ...secondary] = project.links;
   // The cover and every gallery image that exists, shown together in the slideshow up top.
+  // Each slide carries its own pixel size, so the frame takes the shape of the image.
   const slides: ShowcaseSlide[] = [
-    ...(project.cover ? [{ src: project.cover, alt: project.coverAlt ?? project.title }] : []),
+    ...(project.cover ? [{ src: project.cover, alt: project.coverAlt ?? project.title, caption: project.coverCaption }] : []),
     ...project.gallery.flatMap((g) => (g.src ? [{ src: g.src, alt: g.alt ?? g.caption, caption: g.caption }] : [])),
-  ];
+  ].map((s) => ({ ...s, size: publicImageSize(s.src) ?? { width: 16, height: 10 } }));
 
   const facts = [
     { label: t.facts.role, value: project.role },

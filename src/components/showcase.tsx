@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type ShowcaseSlide = { src: string; alt: string; caption?: string };
+export type ShowcaseSlide = { src: string; alt: string; caption?: string; size: { width: number; height: number } };
 
 type Props = {
   slides: ShowcaseSlide[];
@@ -69,6 +69,7 @@ export function Showcase({ slides, label, labels, seconds = 6 }: Props) {
     >
       <div
         className="pshow__stage"
+        style={{ aspectRatio: `${slide.size.width} / ${slide.size.height}` }}
         onPointerDown={(e) => (start.current = e.clientX)}
         onPointerUp={(e) => {
           if (start.current === null) return;

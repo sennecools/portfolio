@@ -20,6 +20,7 @@ export const project: ProjectSource = {
   stack: "Rust · Vulkan",
   links: [],
   cover: "/projects/astrum/cover.jpg",
+  coverCaption: { en: "A generated coastline under a ringed gas giant.", nl: "Een gegenereerde kustlijn onder een gasreus met ringen." },
   coverAlt: {
     en: "Orange coastal terrain and a turquoise sea under a huge ringed gas giant, with clouds drifting across the sky.",
     nl: "Oranje kustlandschap en een turquoise zee onder een enorme gasreus met ringen, met wolken aan de hemel.",

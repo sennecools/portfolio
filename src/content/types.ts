@@ -45,6 +45,8 @@ export type ProjectSource = {
   /** Image in /public, e.g. "/projects/packctl/cover.png". An orange plate is shown until it exists. */
   cover?: string;
   coverAlt?: Localized<string>;
+  /** Short line under the cover in the slideshow; one or two lines at most. */
+  coverCaption?: Localized<string>;
   context: Localized<string[]>;
   built: Localized<string[]>;
   stackRows: { label: Text; value: Text }[];
@@ -74,6 +76,7 @@ export type Project = {
   links: ProjectLink[];
   cover?: string;
   coverAlt?: string;
+  coverCaption?: string;
   context: string[];
   built: string[];
   stackRows: { label: string; value: string }[];

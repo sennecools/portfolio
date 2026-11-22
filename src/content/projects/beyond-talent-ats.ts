@@ -22,6 +22,7 @@ export const project: ProjectSource = {
   placement: "featured",
   links: [],
   cover: shot("dashboard"),
+  coverCaption: { en: "The dashboard: what needs attention today and what is planned.", nl: "Het overzicht: wat vandaag aandacht vraagt en wat er gepland staat." },
   coverAlt: {
     en: "The dashboard: candidates waiting for review, interviews in the coming four weeks and counts of open vacancies, clients and candidates.",
     nl: "Het overzicht: kandidaten die op een beoordeling wachten, gesprekken in de komende vier weken en tellers voor vacatures, klanten en kandidaten.",
@@ -85,47 +86,47 @@ export const project: ProjectSource = {
     {
       src: shot("agenda"),
       alt: { en: "A week in the shared agenda, full of screenings, interviews, assessments and client meetings, each coloured by type.", nl: "Een week in de gedeelde agenda, vol screenings, interviews, assessments en klantafspraken, elk gekleurd per soort." },
-      caption: { en: "The shared agenda: every appointment is linked to a candidate, vacancy or client and coloured by type.", nl: "De gedeelde agenda: elke afspraak is gekoppeld aan een kandidaat, vacature of klant en gekleurd per soort." },
+      caption: { en: "The shared agenda, coloured by type of appointment.", nl: "De gedeelde agenda, gekleurd per soort afspraak." },
     },
     {
       src: shot("appointment"),
       alt: { en: "The dialog for editing an appointment, with a day planner on the left and the type, location, candidate and vacancy on the right.", nl: "Het venster om een afspraak te bewerken, met een dagplanning links en het soort gesprek, de locatie, de kandidaat en de vacature rechts." },
-      caption: { en: "Planning an interview: drag it to a free moment, and the system checks the recruiter is available.", nl: "Een gesprek plannen: sleep het naar een vrij moment, en het systeem controleert of de recruiter beschikbaar is." },
+      caption: { en: "Planning an interview, with a check that the recruiter is free.", nl: "Een gesprek plannen, met een controle of de recruiter vrij is." },
     },
     {
       src: shot("candidate"),
       alt: { en: "A candidate profile with upcoming interviews, three linked vacancies at different stages and six internal notes from the team.", nl: "Een kandidaatprofiel met komende gesprekken, drie gekoppelde vacatures in verschillende fases en zes interne notities van het team." },
-      caption: { en: "A candidate in three vacancies at once, each at its own stage, with the team’s notes beside them.", nl: "Een kandidaat in drie vacatures tegelijk, elk in een eigen fase, met de notities van het team ernaast." },
+      caption: { en: "One candidate in three vacancies, with the team’s notes.", nl: "Eén kandidaat in drie vacatures, met de notities van het team." },
     },
     {
       src: shot("activity"),
       alt: { en: "A candidate’s timeline of notes, calls, emails and status changes, filtered by type, next to a contact summary.", nl: "De tijdlijn van een kandidaat met notities, telefoons, mails en statuswijzigingen, filterbaar per soort, naast een contactoverzicht." },
-      caption: { en: "The timeline: every call, email, note and status change, with when the candidate was last contacted.", nl: "De tijdlijn: elk telefoontje, elke mail, notitie en statuswijziging, met wanneer de kandidaat laatst gecontacteerd werd." },
+      caption: { en: "Every call, email, note and status change on one timeline.", nl: "Elk telefoontje, elke mail, notitie en statuswijziging op één tijdlijn." },
     },
     {
       src: shot("vacancy"),
       alt: { en: "The candidates of one vacancy, each with their stage, next step, source and the date they were linked.", nl: "De kandidaten van één vacature, elk met hun fase, volgende stap, bron en de datum waarop ze gekoppeld werden." },
-      caption: { en: "One vacancy’s pipeline: where every candidate stands and what comes next.", nl: "De pipeline van één vacature: waar elke kandidaat staat en wat er volgt." },
+      caption: { en: "One vacancy: where every candidate stands and what comes next.", nl: "Eén vacature: waar elke kandidaat staat en wat er volgt." },
     },
     {
       src: shot("candidates"),
       alt: { en: "The candidate list with name, contact details, source, status and how many vacancies and talent pools each candidate is in.", nl: "De kandidatenlijst met naam, contactgegevens, bron, status en in hoeveel vacatures en werfreserves elke kandidaat zit." },
-      caption: { en: "All candidates, with saved views for the work list, candidates in a procedure and recent activity.", nl: "Alle kandidaten, met vaste weergaven voor de werklijst, kandidaten in procedure en recente activiteit." },
+      caption: { en: "All candidates, with saved views for daily work.", nl: "Alle kandidaten, met vaste weergaven voor het dagelijkse werk." },
     },
     {
       src: shot("search"),
       alt: { en: "The ⌘K search window over the dashboard, showing a matching candidate.", nl: "Het ⌘K-zoekvenster boven het overzicht, met een gevonden kandidaat." },
-      caption: { en: "⌘K finds any candidate, vacancy or company from anywhere in the app.", nl: "⌘K vindt vanuit elke pagina elke kandidaat, vacature of elk bedrijf." },
+      caption: { en: "⌘K finds any candidate, vacancy or company.", nl: "⌘K vindt elke kandidaat, vacature of elk bedrijf." },
     },
     {
       src: shot("company"),
       alt: { en: "A client company with its profile, four contact people, documents and internal notes.", nl: "Een klantbedrijf met zijn profiel, vier contactpersonen, documenten en interne notities." },
-      caption: { en: "A client: its contacts and their roles, contracts and the team’s notes on the account.", nl: "Een klant: de contactpersonen en hun rol, contracten en de notities van het team over de klant." },
+      caption: { en: "A client with its contacts, documents and notes.", nl: "Een klant met zijn contactpersonen, documenten en notities." },
     },
     {
       src: shot("talent-pool"),
       alt: { en: "A talent pool of IT candidates with their profile, status, location and when they were last active.", nl: "Een werfreserve met IT-kandidaten, hun profiel, status, locatie en wanneer ze laatst actief waren." },
-      caption: { en: "Talent pools keep promising candidates at hand for the next vacancy that fits.", nl: "In de werfreserve blijven goede kandidaten bij de hand voor de volgende vacature die past." },
+      caption: { en: "A talent pool of candidates for the next vacancy that fits.", nl: "Een werfreserve met kandidaten voor de volgende vacature die past." },
     },
   ],
 };

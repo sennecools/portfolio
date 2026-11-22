@@ -26,6 +26,7 @@ export const project: ProjectSource = {
     { kind: "site", href: "https://toriboard.sennerd.com/" },
   ],
   cover: "/projects/taskboard/board.jpg",
+  coverCaption: { en: "A board in dark mode, with a teammate’s live cursor.", nl: "Een bord in donkere modus, met de live cursor van een teamgenoot." },
   coverAlt: {
     en: "A ToriBoard board in dark mode, with a second participant’s live cursor and presence avatar.",
     nl: "Een ToriBoard-bord in donkere modus, met de live cursor en avatar van een tweede deelnemer.",
@@ -100,8 +101,8 @@ export const project: ProjectSource = {
         nl: "Taakvenster met een beschrijving, een checklist, reacties, de toegewezen persoon, prioriteit, deadline, labels en een kleurkiezer.",
       },
       caption: {
-        en: "An open task with its checklist and comments. Changes save automatically.",
-        nl: "Een geopende taak met checklist en reacties. Wijzigingen worden automatisch bewaard.",
+        en: "An open task with its checklist and comments.",
+        nl: "Een geopende taak met checklist en reacties.",
       },
     },
   ],

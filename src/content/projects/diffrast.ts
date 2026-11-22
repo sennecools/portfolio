@@ -20,6 +20,7 @@ export const project: ProjectSource = {
   placement: "strand",
   links: [{ kind: "source", href: "https://github.com/sennecools/diffrast" }],
   cover: "/projects/diffrast/hero.jpg",
+  coverCaption: { en: "A torus knot rendered by diffrast.", nl: "Een torusknoop, gerenderd door diffrast." },
   coverAlt: {
     en: "A polished torus knot rendered by diffrast, reflecting the bright panels of a dark studio.",
     nl: "Een glanzende torusknoop, gerenderd door diffrast, die de lichtpanelen van een donkere studio weerspiegelt.",
@@ -73,8 +74,8 @@ export const project: ProjectSource = {
         nl: "Een raster van acht renders van één torusknoop: driehoeknummers, barycentrische coördinaten, diepte, textuurcoördinaten, normalen, mipniveau, de textuur en het uiteindelijke beeld.",
       },
       caption: {
-        en: "Everything diffrast works out for one image, from which triangle each pixel shows to the final shaded result.",
-        nl: "Alles wat diffrast voor één beeld berekent, van welke driehoek elke pixel toont tot het afgewerkte resultaat.",
+        en: "Everything diffrast computes for one image, step by step.",
+        nl: "Alles wat diffrast voor één beeld berekent, stap voor stap.",
       },
     },
     {
@@ -84,8 +85,8 @@ export const project: ProjectSource = {
         nl: "Animatie van een grijze torusknoop en een grijze textuur die geleidelijk de kleuren en het patroon van de doelbeelden krijgen.",
       },
       caption: {
-        en: "A grey texture is adjusted step by step until the model looks like the target from every angle.",
-        nl: "Een grijze textuur wordt stap voor stap bijgesteld tot het model vanuit elke hoek op het doel lijkt.",
+        en: "A grey texture is adjusted until it matches the target.",
+        nl: "Een grijze textuur wordt bijgesteld tot ze op het doel lijkt.",
       },
     },
     {
@@ -95,8 +96,8 @@ export const project: ProjectSource = {
         nl: "Animatie van een witte bol die stap voor stap vervormt tot een oranje schaakpion, naast het doel en beelden vanuit andere hoeken.",
       },
       caption: {
-        en: "A sphere is reshaped into a chess pawn, using only what the pawn looks like.",
-        nl: "Een bol wordt omgevormd tot een schaakpion, alleen op basis van hoe de pion eruitziet.",
+        en: "A sphere reshaped into a chess pawn, from pictures alone.",
+        nl: "Een bol omgevormd tot een schaakpion, enkel op basis van beelden.",
       },
     },
     {
@@ -106,8 +107,8 @@ export const project: ProjectSource = {
         nl: "Animatie van 24 kleine dobbelstenen die naar de stand van een doeldobbelsteen draaien, met de beste gok omkaderd.",
       },
       caption: {
-        en: "Finding how a die is turned from one tiny image, trying 24 starting guesses at once.",
-        nl: "Uit één klein beeld afleiden hoe een dobbelsteen gedraaid is, met 24 startgokken tegelijk.",
+        en: "Finding how a die is turned, with 24 guesses at once.",
+        nl: "Afleiden hoe een dobbelsteen gedraaid is, met 24 gokken tegelijk.",
       },
     },
   ],
