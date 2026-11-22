@@ -84,6 +84,13 @@ as `{ en: "…", nl: "…" }`; a plain string reads the same in every language (
 
 Until an image is set, the design's orange plate is shown in its place.
 
+### CV
+
+The CV text lives in `cv/content.mjs`, in Dutch and English. After changing it, run `npm run cv`: it renders
+both versions with a local Brave or Chrome (set `CHROME_PATH` if neither is found) and writes
+`public/senne-cools-cv-nl.pdf` and `public/senne-cools-cv-en.pdf`. Each language of the site links its own
+version. The phone number is left out on purpose, because the PDFs are public.
+
 ## Contact form
 
 The form posts to a server action (`src/app/actions/contact.ts`) that validates the input,
