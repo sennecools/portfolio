@@ -1,0 +1,64 @@
+---
+title: "Writing a differentiable rasterizer that is not tied to one GPU vendor"
+date: "2026-10-22"
+summary: "How diffrast is built: a pure-PyTorch reference backend, Triton kernels checked against it, the 64-bit depth key that resolves visibility, and exactly which parts have run on real hardware."
+tags: ["diffrast", "Notes"]
+---
+
+Most texturing and inverse-rendering pipelines render a mesh from several views and backpropagate through the image. The standard tool for that step, nvdiffrast, needs an NVIDIA GPU and is licensed for non-commercial use only. I wrote diffrast to remove both limits: a differentiable mesh rasterizer for PyTorch, MIT licensed, with its GPU kernels written in Triton. I developed and tested it on an AMD RX 9070 XT.
+
+A differentiable rasterizer turns triangles into pixels like any other rasterizer, but it also gives you the gradient of every pixel with respect to the inputs: vertex positions, vertex attributes, textures and UVs. That lets an optimizer change a mesh or a texture until its renders match target images.
+
+## Two backends, one of them the specification
+
+diffrast has four ops, `rasterize`, `interpolate`, `texture` and `antialias`, plus a `DepthPeeler`. Function and argument names follow nvdiffrast's documented API, so most code ports by changing the import. The OpenGL context, range mode, cube-map textures and precomputed mip stacks are not supported.
+
+Each op exists twice:
+
+- The reference backend is 426 lines of plain PyTorch in `backends/reference.py`. It runs on any device, it is slow, and autograd produces its gradients. It rasterizes in homogeneous coordinates (Olano and Greer, 1997), so triangles that cross the camera plane need no clipping.
+- The Triton backend is about 1,690 lines. Triton compiles the same Python-like kernel source for CUDA and for ROCm, which is the reason I picked it. The backward kernels there are written by hand and attached with a `torch.autograd.Function`. One part still goes through autograd: the mip chain in `texture` is built with the reference backend's PyTorch code.
+
+The reference backend is the specification. The Triton tests in `tests/test_triton.py` build random meshes, run both backends on the same device and compare. For `rasterize`, the test first checks that both picked the same triangle per pixel, allowing at most 0.1% of pixels to differ on random meshes. It then compares the Triton output against a float64 evaluation of the reference formulas for those triangles, with an error bound of 1e-4. Float32 rounding differs between the two backends, mostly for tiny triangles whose edge functions cancel, which is why the comparison target is float64.
+
+The reference backend itself is tested against hand-computed scenes, with `torch.autograd.gradcheck` in float64, and with finite differences for `antialias`.
+
+## Visibility with one atomic per pixel
+
+On a GPU, many triangles are tested against the same pixel at the same time. Each one has to compare its depth with the stored one and then store itself, and those two steps must not interleave with another triangle's.
+
+diffrast avoids a lock by packing depth and triangle index into one 64-bit integer per pixel. The depth goes in the high 32 bits as an integer that sorts the same way the float does, the triangle index goes in the low 32 bits:
+
+```py:src/diffrast/backends/_triton_rasterize.py
+    # Map the float's bits to an integer with the same ordering.
+    bits = depth.to(tl.int32, bitcast=True)
+    ordered = tl.where(bits >= 0, bits, bits ^ 0x7FFFFFFF)
+    ordered = tl.where(depth == 0.0, 0, ordered)
+    key = (ordered.to(tl.int64) << 32) | t
+    return tl.where(inside, key, 0x7FFFFFFFFFFFFFFF)
+```
+
+The bits of a non-negative float already sort correctly as a signed integer. Negative floats sort backwards, so the XOR flips their lower 31 bits. Negative and positive zero get the same key. A pixel the triangle does not cover, or where its depth falls outside -1 to 1, gets the largest possible value.
+
+The nearest triangle is the minimum, and two triangles at exactly the same depth resolve to the lower index every time. The tile kernel keeps the best key per pixel in registers while it loops over its triangles and then merges once:
+
+```py:src/diffrast/backends/_triton_rasterize.py
+    mask = inside & (best != 0x7FFFFFFFFFFFFFFF)
+    tl.atomic_min(out_ptr + offs, best, mask=mask)
+```
+
+Triangles in front of the camera whose pixel bounding box fits in 4 x 4 pixels skip tile binning and write their 16 candidate pixels directly with the same `atomic_min`. Larger ones are binned into 16 x 16 tiles in chunks of up to 64 triangles. Depth peeling reuses the keys: the next layer only accepts keys greater than the previous layer's key for that pixel, so triangles at equal depth each get their own layer.
+
+Which triangle wins is a discrete choice and has no gradient. A separate resolve kernel carries gradients back to the winner's three vertices, and gradients that move a silhouette come from `antialias`.
+
+## What has run where
+
+- CI runs on Linux and Windows with CPU PyTorch: 115 tests pass and 3 are skipped. That covers the reference backend and the public API only. The 3 skips are `tests/test_triton.py` as a whole and two GPU-marked tests in other files.
+- The whole Triton suite, 38 test functions in `tests/test_triton.py`, is skipped in CI because the runners have no Triton and no GPU. I have only run those tests locally, on an RX 9070 XT with torch 2.13.0+rocm10.0.0 and triton-windows 3.8.0.post29. The repository records that configuration but no pass count or test log, so nobody else has confirmed the result.
+- I have not run diffrast on an NVIDIA card. Triton targets CUDA, so NVIDIA support is a property of the design and not a test result.
+- There are benchmark scripts per op, but no published benchmark table and no comparison against nvdiffrast. I make no speed claim relative to it.
+
+## Current state
+
+diffrast is pre-alpha, version 0.1.0.dev0, installable from GitHub only. All four ops and depth peeling are implemented on both backends. The two open roadmap items are benchmarks on AMD and NVIDIA, and a PyPI release.
+
+The public history is 14 commits of mine, all made within five hours on the evening of 21 October 2026 and ending just after midnight, plus two Dependabot bumps. It does not show how the work developed step by step. The last commit is from 22 October 2026. The gaps that matter most are the ones above: no recorded run on a CUDA device, and no CI job that executes the Triton tests.

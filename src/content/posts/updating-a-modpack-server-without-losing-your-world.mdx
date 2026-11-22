@@ -1,0 +1,81 @@
+---
+title: "Updating a modpack server without losing your world"
+date: "2026-08-15"
+summary: "How packctl updates a self-hosted Minecraft modpack server: a plan that changes nothing, an apply step that snapshots first and commits state last, and an exact account of what is tested and released."
+tags: ["packctl", "Notes"]
+---
+
+Upgrading a self-hosted modpack server to a new server pack usually wipes the admin mods, config edits and KubeJS changes you added. packctl is a Rust CLI I wrote to do that update on Linux without touching those files or `world/`, for CurseForge server packs or local server-pack zips.
+
+## Three layers, and who owns each file
+
+packctl treats a running server as three layers. It replaces upstream files, copies the overlay on top and leaves persistent data alone.
+
+- Upstream modpack: what the pack author ships. The files packctl installs from it are recorded in `.packctl/state.json` with a SHA-256 hash and size.
+- Local overlay: a directory that mirrors the server root. Its files are copied over the pack after every update, so the overlay always wins.
+- Persistent runtime data: `world/`, `logs/`, `backups/`, `crash-reports/`, plus `ops.json`, `whitelist.json`, the two ban lists, `usercache.json` and `server.properties`.
+
+The persistent list lives in one place, `FilePolicy` in `src/core/ownership.rs`. A path is persistent when its first component is one of those directories or when it is exactly one of those top-level files. The planner never adds, replaces or removes a persistent path from the upstream pack, even if the pack ships it. The overlay is not filtered by that list. An overlay file is copied to wherever it points, which is how you ship your own `server.properties`.
+
+There is no config merging. I did not try to merge TOML, JSON or SNBT files. The model is upstream first, overlay second.
+
+On `main`, the planner also sweeps every top-level folder the new pack ships, such as `mods/` and `config/`, so each ends up equal to the new pack plus the overlay. A file is removed only inside such a folder, and only when it is not in the new pack, not persistent, not provided by the overlay and not matched by a `.packctlignore` file. The cost: a mod jar dropped straight into `mods/` without a copy in the overlay is deleted on the next update.
+
+## Plan first, then apply
+
+`packctl plan` and `packctl update` share one planner. Preparation resolves the version, puts the extracted pack in a staging directory, scans the overlay and builds the plan. The live server is not touched during any of that.
+
+```bash
+cd /amp/instances/AllTheMods10
+packctl create atm10
+packctl plan --verbose
+packctl update
+packctl rollback
+```
+
+`create` writes a `.packctl.toml` in the server root, so later commands run from that directory without a server name. `plan` prints counts of added, changed and removed upstream files and a count of overlay files. With `--verbose` it lists every path.
+
+`update` runs the same plan in a fixed order: take a per-server lock, validate, stop the server, snapshot, apply upstream changes, apply the overlay, validate again, start the server, then write the new `state.json`. If the plan is empty, the server is never stopped.
+
+> A failed update never leaves state claiming the new version is installed.
+
+The server is stopped and started through CubeCoders AMP (`ampinstmgr`) or through a command controller that runs your own status, stop and start commands as argv arrays, never through a shell.
+
+## Snapshots and rollback as they actually work
+
+The snapshot is not a world backup. It copies the existing files the plan is about to touch, plus the previous `state.json`, into `.packctl/snapshots/` under a timestamped directory with a manifest. Paths the plan will add are recorded too, so a rollback can delete them again.
+
+Rollback is manual. If a step fails after the snapshot exists, packctl stops there and wraps the error with the snapshot location:
+
+```rs:src/core/updater.rs
+fn snapshot_context(snapshot: &Snapshot, cause: PackError) -> PackError {
+    let message = format!(
+        "{cause}\nThe new version was not committed.\nRollback snapshot:\n  {}",
+        snapshot.dir.display()
+    );
+    match cause {
+        PackError::Validation(_) => PackError::Validation(message),
+        _ => PackError::Other(message),
+    }
+}
+```
+
+`packctl rollback` then restores the newest snapshot: it stops the server, removes files the update added, copies the captured files back and starts the server. It only restores the latest snapshot; there is no option to pick an older one.
+
+Archive, overlay and config paths are treated as untrusted. Traversal, absolute paths and symlinked path components are rejected before destructive operations. That symlink check, `reject_symlink_components`, is not one shared guard. It exists as three private functions in `executor.rs`, `snapshot.rs` and `overlay.rs`. Two are identical and the overlay one differs slightly.
+
+## How it is tested
+
+The tests are inline in the source files: 235 test functions across 29 files, about 44 percent of the 12,607 lines of Rust. The updater tests use a fake controller that records stop and start calls and a fake provider, and run against temporary directories. They cover cases such as `failed_stop_does_not_commit_or_write_files`, `validation_failure_blocks_commit` and `empty_plan_skips_execution_without_contacting_server`.
+
+GitHub Actions runs `cargo fmt --check`, clippy with warnings as errors and `cargo test` on Ubuntu, and the latest run on `main` is green. `cargo test` does not compile on Windows, because the controller tests use Unix-only permission APIs. The CLI argument parser and the `doctor`, `rollback` and `apikey` commands have no tests.
+
+## Current state
+
+packctl is Linux only, x86_64 and arm64, shipped as static musl binaries with a checksum-verifying install script.
+
+The whole history is 39 commits on 14 and 15 August 2026, with nothing since, and I leaned heavily on an AI coding assistant to write it at that pace.
+
+The tagged release, v0.1.0, is four commits behind `main`. It does not contain `.packctlignore` or the pack-owned folder sweep, although the README documents both. Those exist only on `main` and in the `rolling` prerelease, and the installer defaults to the latest stable release.
+
+Still missing: a license file, a release that matches `main`, tests that build on Windows, one shared symlink check, and any recorded run against a real server in the repository.

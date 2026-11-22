@@ -1,0 +1,81 @@
+---
+title: "One source tree, 24 builds"
+date: "2026-10-26"
+summary: "How Better TabList compiles a single Java source tree for 12 Minecraft versions on Fabric and NeoForge with Stonecutter, and what the 1.6 release added on top of that."
+tags: ["Better TabList", "Updates"]
+---
+
+Better TabList is a server-side Minecraft mod that customizes the tab list. It supports Minecraft 1.21 through 1.21.11 on both Fabric and NeoForge, which is 12 versions times 2 loaders. Mojang renamed several methods inside that range, and the two loaders have different APIs, so the same Java file does not compile everywhere without help.
+
+I did not want 24 branches or 24 copies of the code. The 2026 rewrite moved the mod to one source tree, built 24 times with Stonecutter.
+
+## Version predicates for Mojang renames
+
+Stonecutter is a comment preprocessor. `settings.gradle` lists 24 nodes, from `1.21-fabric` to `1.21.11-neoforge`, and a `mapBuilds` rule takes the part after the dash to pick `fabric.gradle` or `neoforge.gradle` as the build script for each node.
+
+In the Java code, both variants of a line sit next to each other. One is live, the other is inside a block comment. Stonecutter flips them per target before compiling. This is the `#WORLD` placeholder:
+
+```java:src/main/java/com/sennecools/tablist/TabListVariables.java
+//? if >=1.21.11 {
+/*output = output.replace("#WORLD", player.level().dimension().identifier().getPath());*/
+//?} else {
+output = output.replace("#WORLD", player.level().dimension().location().getPath());
+//?}
+```
+
+The source only needs two version thresholds:
+
+- From 1.21.9, `GameProfile.getName()` is `name()`, and `player.getServer()` becomes `player.level().getServer()`.
+- From 1.21.11, `dimension().location()` is `identifier()`, and the permission check on the `/tablist reload` command uses the new permissions API instead of `hasPermission(2)`.
+
+The checked-in state of the repository is the `1.21.1-fabric` variant. That means the NeoForge classes are committed as one large block comment, which looks odd the first time you open them.
+
+The cost is duplication. The player name lookup is repeated in six places across `TabListVariables`, `TabListUpdater` and `FTBRanksIntegration`, each with its own predicate. A small helper method would cut that down. The repository does not have one.
+
+## Loader differences behind a ServiceLoader
+
+Version predicates handle Mojang. For loader differences I use the Services pattern from the common multiloader templates, so this part is not my invention. `PlatformHelper` is an interface with three methods: `isModLoaded`, `getConfigDir` and `refreshDisplayName`. `Services.PLATFORM` loads the implementation with `java.util.ServiceLoader`.
+
+Each loader has its own resources directory with a `META-INF/services` file that names either `FabricPlatformHelper` or `NeoForgePlatformHelper`. The loader build scripts set the `fabric` and `neoforge` Stonecutter constants, and whole files are wrapped in `//? if fabric` or `//? if neoforge`. The shared code never asks which loader it is running on. It only calls `Services.PLATFORM`.
+
+> The shared code never asks which loader it is running on.
+
+## The one mixin
+
+Custom names in the tab list need different code per loader. NeoForge fires a `PlayerEvent.TabListNameFormat` event, so the NeoForge entry point subscribes to it and sets the display name. The Fabric build does the same job with a mixin:
+
+```java:src/main/java/com/sennecools/tablist/fabric/mixin/ServerPlayerMixin.java
+@Mixin(ServerPlayer.class)
+public abstract class ServerPlayerMixin {
+
+    @Inject(method = "getTabListDisplayName", at = @At("HEAD"), cancellable = true)
+    private void tablist$getTabListDisplayName(CallbackInfoReturnable<Component> cir) {
+        ServerPlayer self = (ServerPlayer) (Object) this;
+        String displayName = TabListVariables.resolveDisplayName(self);
+        cir.setReturnValue(TabListVariables.parseColoredText(displayName));
+    }
+}
+```
+
+Both paths call the same two methods in `TabListVariables`. It is the only mixin in the project, and it only exists in the Fabric jars.
+
+## What 1.6 added
+
+Version 1.6 added optional LuckPerms prefixes, suffixes, groups and rank sorting, dimension and health placeholders for player names, colored MSPT and CPU metrics, and optional spark statistics.
+
+Those features are not originally mine. They come from the LPintegration branch of MihailDenisov's fork, which targeted NeoForge 1.21.1. He is credited in the README, the changelog, the source Javadoc and issue #13. My part was adapting his implementation and ideas to all 24 targets and making the optional parts fail safely.
+
+Two examples of that. `LuckPermsIntegration` only reads users LuckPerms has already loaded, so it never blocks a server tick on storage. `ServerMetricsResolver` takes one metrics sample per update cycle and shares it across all players, and it catches `LinkageError` around the spark call, so a missing spark API falls back to vanilla measurements instead of crashing.
+
+The 1.6 commit also added the project's first tests: 14 JUnit 5 tests in three classes, covering the LuckPerms lookup, config defaults, legacy migration and reload, and the metrics resolver.
+
+## Current state and what is missing
+
+1.6 is published on Modrinth for all 24 targets. A GitHub Actions workflow builds every target on each push and pull request, and it passes on the latest commit.
+What is not done:
+
+The 14 tests do not touch the color and gradient parser, AFK detection or sorting. The parser is the most intricate code I wrote for this mod, and it has no tests.
+
+Header and footer packets are only sent when the rendered text changes, but the display-name refresh is broadcast for every player on every update cycle, changed or not. Nothing caches the last display name per player, so there is no change check on that path.
+
+GitHub Releases still stop at 1.3, the changelog has an unreleased section on top of 1.6, and the repository has no LICENSE file.

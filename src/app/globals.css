@@ -1,0 +1,911 @@
+html{scroll-behavior:smooth}
+body{margin:0;background:#131110}
+a{color:inherit}a:hover{color:inherit}
+*,*::before,*::after{box-sizing:border-box}
+h1,h2,h3,p,figure,ul,dl,dd,fieldset{margin:0}
+ul{padding:0;list-style:none}
+
+/* =========================================================
+   Colour — warm ink, bone type, one signal colour.
+   The neutrals carry the page; the signal colour is only ever
+   used at full strength: image plates, the active tab, the
+   primary action, links and hover states.
+   ========================================================= */
+.page{
+  --h:#ff4f1f;
+  --on-h:#14100e;
+  --paper:color-mix(in srgb,var(--h) 3%,#121110);
+  --back:color-mix(in srgb,var(--h) 3%,#1a1817);
+  --raise:color-mix(in srgb,var(--h) 4%,#252220);
+  --deep:var(--raise);
+  --night:color-mix(in srgb,var(--h) 2%,#0c0b0a);
+  --link:color-mix(in srgb,var(--h) 80%,#fff);
+  --white:#f0eadf;
+  --text:#d2cbbf;
+  --muted:rgb(240 234 223/.64);
+  --line:rgb(240 234 223/.13);
+  --wash:rgb(240 234 223/.06);
+  --grain:.045;
+  /* Motion tokens. One easing family, no overshoot anywhere; the Motion block at the end of this file uses them. */
+  --ease:cubic-bezier(.2,.7,.2,1);        /* colour-only changes */
+  --ease-out:cubic-bezier(.22,1,.36,1);   /* every arrival, wipe-in, line draw, image scale */
+  --ease-inout:cubic-bezier(.65,0,.35,1); /* things already on screen that travel: tab block, nav bar */
+  --ease-exit:cubic-bezier(.4,0,1,1);     /* wipes and lines leaving */
+  --t-press:.09s;   /* :active feedback */
+  --t-fast:.18s;    /* colour */
+  --t-mid:.28s;     /* exits, retracts, small glyph moves, menu close */
+  --t-slow:.42s;    /* wipes in, underline draw, tab block, nav bar, menu open */
+  --t-image:.9s;    /* picture scaling inside its frame on hover */
+  --in-text:.7s;    /* arrival: copy rising 12px */
+  --in-text-s:.6s;  /* arrival: rows, cells, small fades */
+  --in-mask:.85s;   /* arrival: heading lines and words rising behind a mask */
+  --in-wipe:.9s;    /* arrival: wide frames */
+  --in-wipe-s:.75s; /* arrival: small frames */
+  --in-rule:.8s;    /* arrival: a dotted rule drawing */
+  --in-page:.36s;   /* a new page fading in after a client-side navigation */
+  --rise:12px;--rise-s:8px;       /* how far copy / small items travel on arrival */
+  --frame-zoom:1.06;              /* where a picture starts while its frame wipes open */
+  --img-scale:1.05;               /* picture scale on card hover */
+  --d-glyph:4px;--d-title:6px;    /* arrow and row-title travel on hover */
+  --drift:6%;                     /* plate grain travel while scrolling (the layer overhangs 12%) */
+  --step:60ms;                    /* stagger between lines that arrive together */
+  --wipe-in:var(--t-slow);--wipe-out:var(--t-mid); /* a fill or line entering / leaving */
+  --stag:1;                       /* multiplier on small sequencing delays; 0 under reduced motion */
+  --k:1;                          /* multiplier on page-head delays; halved after a client-side navigation */
+  --orbit:3s;                     /* one lap of the light inside a button edge */
+  --font-display:var(--font-archivo),'Archivo','Arial Narrow',sans-serif;
+  --font-gothic:var(--font-league-gothic),'League Gothic',var(--font-archivo),'Arial Narrow',sans-serif;
+  --font-body:var(--font-instrument-sans),'Instrument Sans',system-ui,sans-serif;
+  --font-mono:var(--font-dm-mono),'DM Mono',ui-monospace,monospace;
+  position:relative;background:var(--back);color:var(--text);
+  font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+
+/* Fine film grain over everything */
+.page::after{content:'';position:fixed;inset:0;z-index:100;pointer-events:none;background-image:url(/textures/grain.png);background-size:200px 200px;opacity:var(--grain)}
+
+.band-paper{background:var(--paper)}
+.band-back{background:var(--back)}
+.band-night{background:var(--night)}
+.wrap{width:min(1080px,100% - 48px);margin-inline:auto}
+.page :focus-visible{outline:2px solid var(--link);outline-offset:3px}
+
+/* =========================================================
+   Type
+   ========================================================= */
+.t-hero{font-family:var(--font-display);font-stretch:66%;font-weight:200;font-size:clamp(60px,7.5vw,108px);line-height:1;letter-spacing:-.02em;color:var(--white)}
+.t-section{font-family:var(--font-display);font-stretch:66%;font-weight:300;font-size:clamp(52px,5.6vw,80px);line-height:1;letter-spacing:-.02em;color:var(--white)}
+.t-title{font-family:var(--font-gothic);font-stretch:80%;font-weight:400;font-size:clamp(40px,3.4vw,48px);line-height:1.1;color:var(--white)}
+.t-lead{font-family:var(--font-display);font-stretch:66%;font-weight:300;font-size:clamp(22px,2vw,28px);line-height:1.3;color:var(--white)}
+.t-meta{font-family:var(--font-mono);font-size:11px;font-weight:400;line-height:1.5;letter-spacing:.02em;text-transform:uppercase;color:var(--white)}
+.t-ui{font-family:var(--font-display);font-stretch:75%;font-weight:500;font-size:15px;line-height:1;letter-spacing:.02em;text-transform:uppercase}
+.t-link{position:relative;display:inline-block;color:var(--white);text-decoration:none;transition:color var(--t-fast) var(--ease)}
+.t-link:hover{color:var(--link)}
+.dim{color:var(--muted)}
+
+
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;padding:0 12px;border:0;border-radius:2px;text-decoration:none;color:var(--white);cursor:pointer;white-space:nowrap;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+.btn--wash{background:var(--wash)}
+.btn--wash:hover{background:rgb(240 234 223/.12)}
+.btn--bone{background:var(--white);color:#14100e}
+.btn--bone:hover{background:#fff}
+.btn--hue{background:var(--h);color:var(--on-h)}
+.btn--hue:hover{background:color-mix(in srgb,var(--h) 86%,#fff)}
+
+/* Image plates: the signal colour at full strength, with dark print grain.
+   The grain layer is taller than the frame and drifts a little as the plate scrolls past (see Motion). */
+.plate{position:relative;overflow:hidden;border-radius:4px;isolation:isolate;background:linear-gradient(165deg,var(--h),color-mix(in srgb,var(--h) 88%,#000))}
+.plate__img{position:absolute;inset:-12% 0;background-image:url(/textures/plate.png);background-size:240px 240px;filter:invert(1);opacity:.3}
+.plate__slot{position:absolute;inset:0;z-index:1;display:grid;place-items:center;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--on-h)}
+/* Neutral frame for screenshots and the portrait */
+.field{position:relative;overflow:hidden;border-radius:4px;background:var(--raise);box-shadow:inset 0 0 0 1px var(--line)}
+.field .plate__slot{color:var(--muted)}
+
+/* Rows: one list pattern for projects, posts and facts. Link rows fill with the signal colour on hover. */
+.rows{border-top:1px dotted var(--muted)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 240px 70px 16px;gap:24px;align-items:baseline;margin-inline:-12px;padding:18px 12px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--text)}
+.row--post{grid-template-columns:140px minmax(0,1fr) 140px 16px}
+.row__title{font-family:var(--font-display);font-stretch:62%;font-weight:300;font-size:clamp(24px,2.3vw,32px);line-height:1.4;color:var(--white)}
+.row__meta{font-family:var(--font-mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+.row__end{text-align:right}
+.row__arrow{color:var(--link)}
+.kv li{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding-block:14px;border-bottom:1px solid var(--line)}
+.kv li span:last-child{color:var(--white);text-align:right}
+
+/* =========================================================
+   Nav — symmetric
+   ========================================================= */
+.nav{position:fixed;inset:0 0 auto;z-index:50}
+.nav__inner{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center}
+.nav__link{font-family:var(--font-display);font-stretch:75%;font-weight:500;font-size:14px;line-height:1;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--white);padding-block:14px;transition:color var(--t-fast) var(--ease)}
+.nav__link:hover{color:var(--link)}
+.nav__1{justify-self:start}.nav__2{justify-self:center}.nav__4{justify-self:center}.nav__5{justify-self:end}
+.nav__mark{justify-self:center;display:flex;flex-direction:column;align-items:center;font-family:var(--font-display);font-stretch:62%;font-weight:300;font-size:31px;line-height:.95;text-transform:uppercase;text-decoration:none;color:var(--white);transition:color var(--t-fast) var(--ease)}
+.nav__mark:hover{color:var(--link)}
+.nav__menu{display:none;place-items:center;width:44px;height:44px;margin-right:-12px;background:none;border:0;border-radius:2px;color:var(--white);cursor:pointer;justify-self:end}
+.nav__panel{border-top:1px solid var(--line);padding-block:12px 28px;background:var(--paper);}
+.nav__panel a{display:block;padding-block:6px;text-decoration:none}
+
+/* =========================================================
+   Hero
+   ========================================================= */
+.hero{padding-block:145px 0}
+.hero__grid{display:grid;grid-template-columns:450px minmax(0,1fr);column-gap:52px;align-items:start}
+.hero__copy{padding-top:80px}
+.hero__title span{display:block;white-space:nowrap}
+.hero__intro{max-width:400px;margin-top:26px}
+.hero__actions{display:flex;gap:2px;margin-top:30px}
+.hero__label{margin:44px 0 16px;color:var(--muted)}
+.hero__art{justify-self:end;width:574px;aspect-ratio:574/621}
+
+/* At a glance: the facts a recruiter looks for, straight under the hero */
+.glance{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:30px;margin-top:90px;padding-top:20px;border-top:1px dotted var(--muted)}
+.glance dt{color:var(--muted)}
+.glance dd{margin-top:10px;color:var(--white)}
+
+/* Link selector */
+.links{width:450px;max-width:100%}
+.links__body{background:var(--deep);color:var(--white);border-radius:6px;padding:4px;font-family:var(--font-mono);font-size:11px;line-height:1.5;box-shadow:inset 0 0 0 1px var(--line)}
+.links__tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+.links__tab{display:flex;justify-content:space-between;align-items:center;gap:4px;min-width:0;padding:6px 12px;border:0;background:rgb(240 234 223/.07);color:var(--white);font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+.links__tab:hover{background:rgb(240 234 223/.13)}
+.links__tab:first-of-type{border-radius:4px 0 0 4px}
+.links__tab:last-of-type{border-radius:0 4px 4px 0}
+.links__tab span{opacity:.4}
+.links__tab[aria-selected='true'],.links__tab[aria-checked='true'],.links__tab[aria-pressed='true']{background:var(--h);color:var(--on-h);text-decoration:none}
+.links__tab[aria-selected='true'] span{opacity:1}
+.links__panel{display:flex;align-items:center;gap:6px;padding:8px 12px}
+.links__panel code{flex:1;min-width:0;font:inherit;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+.links__open{display:grid;place-items:center;flex:none;padding:4px;margin:-4px -4px -4px 0;border-radius:3px;color:var(--link)}
+
+/* =========================================================
+   Featured project — one case, shown large
+   ========================================================= */
+.featured{padding-block:130px 150px}
+.featured__frame{aspect-ratio:1080/600}
+.featured__body{display:grid;grid-template-columns:minmax(0,1fr) 400px;column-gap:80px;align-items:start;margin-top:44px}
+.featured__title{margin-top:16px}
+.featured__text{max-width:460px;margin-top:22px}
+.featured__actions{display:flex;flex-wrap:wrap;gap:2px;margin-top:30px}
+.featured .kv{border-top:1px dotted var(--muted)}
+
+/* =========================================================
+   Work — three strands, then the rest as an index
+   ========================================================= */
+.work{padding-top:170px}
+.head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+.head-row__link{margin-bottom:12px}
+.work__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:40px;margin-top:56px}
+.item{display:grid;grid-template-rows:auto auto auto 1fr auto;text-decoration:none;color:var(--text)}
+.item__plate{aspect-ratio:333/300}
+.item__label{margin-top:22px;color:var(--muted)}
+.item__title{margin-top:10px;transition:color var(--t-fast) var(--ease)}
+.item__text{margin-top:14px}
+.item__more{justify-self:start;margin-top:20px;font-size:14px}
+.work__more{margin-top:120px}
+.work__more-label{margin-bottom:14px;color:var(--muted)}
+
+/* =========================================================
+   About — visible, no accordion
+   ========================================================= */
+.about{padding-block:170px 170px}
+.about__grid{display:grid;grid-template-columns:330px minmax(0,1fr);column-gap:80px;align-items:start;margin-top:56px}
+.about__portrait{aspect-ratio:4/5}
+.about__lead{max-width:600px}
+.about__text{max-width:560px;margin-top:22px}
+.about .kv{margin-top:44px;border-top:1px dotted var(--muted)}
+
+/* =========================================================
+   Contact
+   ========================================================= */
+.contact{padding-block:170px 170px}
+.contact__grid{display:grid;grid-template-columns:minmax(0,1fr) 520px;column-gap:80px;align-items:start}
+.contact__text{max-width:400px;margin-top:34px}
+.contact__list{margin-top:56px;border-top:1px dotted var(--muted)}
+.contact__list li{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding-block:16px;border-bottom:1px solid var(--line)}
+.contact__val{font-family:var(--font-display);font-stretch:62%;font-weight:300;font-size:24px;line-height:1.3;color:var(--white);text-decoration:none;transition:color var(--t-fast) var(--ease)}
+a.contact__val:hover{color:var(--link)}
+
+.form{padding:28px;border-radius:6px;background:var(--raise);box-shadow:inset 0 0 0 1px var(--line)}
+.form__label{display:block;margin-bottom:10px;color:var(--muted)}
+.form__seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;font-family:var(--font-mono);font-size:11px}
+.form__seg .links__tab{justify-content:center}
+.form__row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:24px}
+.form__field{display:block}
+.form__msg{margin-top:24px}
+.input{display:block;width:100%;padding:12px 14px;border:0;border-radius:4px;background:rgb(0 0 0/.25);box-shadow:inset 0 0 0 1px var(--line);color:var(--white);font:inherit;font-size:15px;line-height:1.5;transition:box-shadow var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
+.input::placeholder{color:rgb(240 234 223/.52)}
+.input:hover{box-shadow:inset 0 0 0 1px rgb(240 234 223/.28)}
+.input:focus{outline:none;box-shadow:inset 0 0 0 1px var(--h)}
+textarea.input{min-height:150px;resize:vertical}
+.form__foot{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:24px}
+.form__err{margin-top:16px;color:var(--link);font-family:var(--font-mono);font-size:11px;text-transform:uppercase}
+.form__done{padding-block:40px 20px;text-align:center;}
+.form__done .t-title{margin-top:18px}
+.form__done p{max-width:340px;margin:16px auto 0}
+.form__done .btn{margin-top:28px}
+
+/* =========================================================
+   Footer — compact
+   ========================================================= */
+.foot{padding-block:64px 36px;color:var(--white)}
+.foot__top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px}
+.foot__mark{font-family:var(--font-display);font-stretch:62%;font-weight:300;font-size:31px;line-height:.95;text-transform:uppercase;text-decoration:none}
+.foot__nav{display:flex;gap:36px}
+.foot__nav a,.foot__social a,.foot__mark{transition:color var(--t-fast) var(--ease)}
+.foot__mark:hover{color:var(--link)}
+.foot__nav a,.foot__social a{font-size:14px;letter-spacing:.1em;text-decoration:none}
+.foot__nav a:hover,.foot__social a:hover{color:var(--link)}
+.foot__social{display:flex;justify-content:flex-end;gap:28px}
+.foot__bottom{display:flex;justify-content:space-between;gap:24px;margin-top:56px;padding-top:20px;border-top:1px dotted var(--muted);font-size:13px;color:var(--muted)}
+.foot__bottom a{color:var(--muted)}
+.foot__langs{display:flex;flex-wrap:wrap;gap:8px 20px}
+.ahead__lang{margin-top:18px}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width:1240px){.hero__art{width:100%}}
+@media (min-width:861px){.nav__panel{display:none}}
+@media (max-width:960px){
+  .work__grid{grid-template-columns:minmax(0,1fr);row-gap:64px}
+  .featured__body{grid-template-columns:minmax(0,1fr);row-gap:44px}
+}
+@media (max-width:860px){
+  .nav__inner{grid-template-columns:1fr auto}
+  .nav__link{display:none}
+  .nav__mark{justify-self:start;flex-direction:column;align-items:flex-start;gap:0;font-size:26px}
+  .nav__menu{display:grid}
+  .hero{padding-top:104px}
+  .hero__grid{grid-template-columns:minmax(0,1fr)}
+  .hero__copy{padding-top:44px}
+  .hero__actions{flex-direction:column;align-items:flex-start;gap:10px}
+  .hero__art{justify-self:stretch;width:auto;margin:56px -24px 0;border-radius:0}
+  .glance{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:28px;margin-top:56px}
+  .featured{padding-block:90px 110px}
+  .featured__frame{margin-inline:-24px;border-radius:0}
+  .work{padding-top:110px}
+  .head-row{flex-direction:column;align-items:flex-start}
+  .head-row__link{margin-bottom:0}
+  .row,.row--post{grid-template-columns:minmax(0,1fr) auto;gap:4px 16px}
+  .row__meta{grid-column:1}
+  .row__end{text-align:left}
+  .row__arrow{grid-column:2;grid-row:1}
+  .work__more{margin-top:80px}
+  .about{padding-block:110px}
+  .about__grid{grid-template-columns:minmax(0,1fr);row-gap:44px}
+  .about__portrait{max-width:330px}
+  .contact{padding-block:110px}
+  .contact__grid{grid-template-columns:minmax(0,1fr);row-gap:56px}
+  .form{padding:20px}
+  .form__row{grid-template-columns:minmax(0,1fr)}
+  .form__foot{flex-direction:column;align-items:flex-start}
+  .foot__top{grid-template-columns:minmax(0,1fr);row-gap:32px}
+  .foot__nav,.foot__social{flex-wrap:wrap;justify-content:flex-start;gap:16px 28px}
+  .foot__bottom{flex-direction:column}
+}
+@media (pointer:coarse){.btn{min-height:44px}.links__tab{padding-block:13px}.links__open{padding:14px;margin:-14px -12px -14px 0}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.back{display:inline-block;padding-left:4px;margin-left:-4px;font-size:14px;letter-spacing:.1em;text-decoration:none;color:var(--muted);transition:color var(--t-fast) var(--ease)}
+.back:hover{color:var(--link)}
+
+/* =========================================================
+   Project detail
+   ========================================================= */
+.phead{padding-block:225px 0}
+.phead__label{margin-top:56px}
+.phead__title{margin-top:20px}
+.phead__intro{max-width:620px;margin-top:30px}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:30px;margin-top:72px;padding-top:20px;border-top:1px dotted var(--muted)}
+.facts dt{color:var(--muted)}
+.facts dd{margin-top:10px;color:var(--white)}
+.phead__actions{display:flex;gap:2px;margin-top:44px}
+.pcover{margin-top:90px;aspect-ratio:1080/600}
+.pcover-wrap{padding-bottom:130px}
+.pbody{padding-block:130px 0}
+.psec{display:grid;grid-template-columns:260px minmax(0,1fr);column-gap:60px;padding-block:48px;border-top:1px solid var(--line)}
+.psec:first-child{border-top:1px dotted var(--muted)}
+.psec__label{position:sticky;top:120px;align-self:start;color:var(--muted)}
+.psec__body{max-width:640px;font-size:17px;line-height:1.7}
+.psec__body p+p{margin-top:18px}
+.psec .kv li:first-child{padding-top:0}
+.challenge+.challenge{margin-top:36px}
+.challenge h3{margin-bottom:10px}
+.pgallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px;margin-top:100px}
+.pgallery .field{aspect-ratio:16/10}
+.pgallery figcaption{margin-top:14px;color:var(--muted)}
+.pnext{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:150px;margin-inline:-12px;padding:44px 12px;border-top:1px dotted var(--muted);text-decoration:none;color:var(--white)}
+.pnext__title{margin-top:16px}
+.pend{height:150px}
+@media (max-width:860px){
+  .phead{padding-top:150px}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:28px}
+  .phead__actions{flex-wrap:wrap}
+  .pcover{margin-inline:-24px;border-radius:0}
+  .pcover-wrap{padding-bottom:80px}
+  .pbody{padding-top:80px}
+  .psec{grid-template-columns:minmax(0,1fr);row-gap:18px}
+  .psec__label{position:static}
+  .pgallery{grid-template-columns:minmax(0,1fr)}
+  .pnext{flex-direction:column;align-items:flex-start}
+  .pend{height:90px}
+}
+/* =========================================================
+   Blog
+   ========================================================= */
+.bhead{padding-block:225px 130px}
+.bhead__sub{max-width:520px;margin-top:28px}
+.bfeat{display:grid;grid-template-columns:minmax(0,620px) minmax(0,1fr);column-gap:52px;align-items:end;margin-top:84px;text-decoration:none;color:var(--text)}
+.bfeat__plate{aspect-ratio:16/10}
+.bfeat__title{margin-top:18px;transition:color var(--t-fast) var(--ease)}
+.bfeat__text{margin-top:18px;max-width:380px}
+.bfeat__more{display:inline-block;margin-top:26px}
+.blist{padding-block:170px 170px}
+.filters{display:inline-grid;grid-auto-flow:column;gap:2px;margin-top:40px;padding:4px;border-radius:6px;background:var(--deep);box-shadow:inset 0 0 0 1px var(--line);font-family:var(--font-mono);font-size:11px}
+.filters .links__tab{justify-content:center;padding-inline:16px}
+.blist .rows{margin-top:40px}
+.older{display:flex;justify-content:space-between;margin-top:48px}
+@media (max-width:860px){
+  .bhead{padding-block:150px 80px}
+  .bfeat{grid-template-columns:minmax(0,1fr);row-gap:24px}
+  .bfeat__plate{margin-inline:-24px;border-radius:0}
+  .blist{padding-block:110px}
+}
+/* =========================================================
+   Single post
+   ========================================================= */
+.ahead{padding-block:225px 0}
+.ahead__inner{max-width:760px}
+.ahead__meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:56px}
+.ahead__meta span{color:var(--muted)}
+.ahead__meta .tag{color:var(--link)}
+.ahead__title{margin-top:20px}
+.ahead__lede{margin-top:30px}
+.acover{margin-top:80px;aspect-ratio:1080/520}
+.acover-wrap{padding-bottom:120px}
+.abody{padding-block:120px 150px}
+.prose{max-width:680px;margin-inline:auto;font-size:18px;line-height:1.75;color:var(--text)}
+.prose > * + *{margin-top:24px}
+.prose h2{margin-top:64px;font-family:var(--font-gothic);font-stretch:80%;font-weight:400;font-size:40px;line-height:1.1;color:var(--white)}
+.prose h3{margin-top:44px;font-family:var(--font-display);font-stretch:62%;font-weight:300;font-size:28px;line-height:1.3;color:var(--white)}
+.prose a{color:var(--white);text-decoration:underline;text-decoration-thickness:1px;text-decoration-color:var(--h);text-underline-offset:4px;transition:color var(--t-fast) var(--ease)}
+.prose a:hover{color:var(--link)}
+.prose li{position:relative;padding-left:22px}
+.prose li+li{margin-top:10px}
+.prose li::before{content:'';position:absolute;left:0;top:.78em;width:10px;height:1px;background:var(--h)}
+.prose code{padding:2px 6px;border-radius:3px;background:var(--wash);font-family:var(--font-mono);font-size:.82em;color:var(--white)}
+.prose blockquote{margin:48px 0;padding:6px 0 6px 28px;border-left:2px solid var(--h);font-family:var(--font-display);font-stretch:66%;font-weight:300;font-size:30px;line-height:1.3;color:var(--white)}
+.codeblock{margin:40px 0;border-radius:6px;background:var(--deep);box-shadow:inset 0 0 0 1px var(--line);padding:4px;font-family:var(--font-mono);font-size:12px;line-height:1.7;color:var(--white)}
+.codeblock__bar{display:flex;justify-content:space-between;padding:6px 12px;border-radius:4px;background:rgb(240 234 223/.07);font-size:11px}
+.codeblock__bar span:first-child{color:var(--white)}
+.codeblock__bar span:last-child{color:rgb(240 234 223/.75)}
+.codeblock pre{margin:0;padding:14px 12px;overflow-x:auto}
+.prose .codeblock code{padding:0;background:none;font-size:inherit}
+.afig{margin:56px 0}
+.afig .field{aspect-ratio:16/9}
+.afig figcaption{margin-top:14px;color:var(--muted)}
+.afoot{max-width:680px;margin:90px auto 0;padding-top:22px;border-top:1px dotted var(--muted);display:flex;justify-content:space-between;align-items:center;gap:24px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags a{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:2px;background:var(--wash);font-family:var(--font-mono);font-size:11px;text-transform:uppercase;text-decoration:none}
+.pager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px;max-width:680px;margin:110px auto 0}
+.pager a{padding:20px;border-radius:4px;background:var(--wash);text-decoration:none}
+.pager a:last-child{text-align:right}
+.pager .t-lead{margin-top:10px}
+.more{padding-block:150px 170px}
+.more .rows{margin-top:40px}
+@media (max-width:860px){
+  .ahead{padding-top:150px}
+  .acover{margin-inline:-24px;border-radius:0}
+  .acover-wrap{padding-bottom:70px}
+  .abody{padding-block:80px 100px}
+  .prose{font-size:17px}
+  .afoot{flex-direction:column;align-items:flex-start}
+  .pager{grid-template-columns:minmax(0,1fr)}
+  .pager a:last-child{text-align:left}
+  .more{padding-block:100px 110px}
+}
+
+/* =========================================================
+   Additions on top of the design file
+   ========================================================= */
+.nav__link[aria-current="page"]{color:var(--link)}
+.plate__shot,.field__shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.empty{padding-block:28px;color:var(--muted)}
+.notfound{padding-block:225px 170px}
+.notfound p{max-width:460px;margin-top:28px}
+.notfound .btn{margin-top:30px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.pgallery .field__shot{object-fit:contain}
+/* An odd last screenshot takes the full row instead of leaving a hole in the grid */
+.pgallery figure:last-child:nth-child(odd){grid-column:1/-1}
+.pgallery figure:last-child:nth-child(odd) .field{aspect-ratio:16/9}
+
+/* =========================================================
+   Refinements on top of the design file.
+   Same look; these fix size, texture and alignment only.
+   ========================================================= */
+
+/* --- Grain: in the paper, under the content, instead of a layer over everything --- */
+.page{--grain:.03}
+.page::after{content:none}
+.band-paper,.band-back,.band-night{position:relative;isolation:isolate}
+.band-paper::before,.band-back::before,.band-night::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url(/textures/grain.png) 0 0/200px 200px;opacity:var(--grain)}
+
+/* --- Nav: links grouped round the mark. The bar is always 72px tall; the taller, open look at the
+   top of the page is a transform on the row (see Motion), so scrolling never animates layout --- */
+.nav__inner{display:flex;justify-content:center;gap:64px;height:72px}
+.nav__mark{font-size:26px;margin-inline:8px}
+.nav__menu{margin-left:auto}
+/* Language switch: at the right edge of the bar on desktop, next to the menu button on phones */
+.nav__inner{position:relative}
+.nav__lang{position:absolute;right:0;top:50%;translate:0 -50%;padding:14px 0 14px 12px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-decoration:none;color:var(--muted);transition:color var(--t-fast) var(--ease)}
+.nav__lang:hover{color:var(--link)}
+.hero{padding-top:96px}
+.hero{--hero-top:64px}
+.hero__copy{padding-top:var(--hero-top)}
+/* On desktop the picture spans the copy exactly: its top meets the eyebrow, its bottom the link selector */
+@media (min-width:861px){
+  .hero__grid{align-items:stretch}
+  .hero__art{aspect-ratio:auto;margin-top:var(--hero-top)}
+}
+.hero__eyebrow{margin-bottom:18px}
+.phead,.bhead,.ahead,.notfound{padding-top:168px}
+.bhead__title,.notfound__title{margin-top:22px}
+.psec__label{top:104px}
+:is(#work,#about,#contact){scroll-margin-top:72px}
+
+/* --- One alignment line: every two-column block splits at 450px + 52px, like the hero --- */
+.featured__body,.about__grid,.contact__grid{grid-template-columns:450px minmax(0,1fr);column-gap:52px}
+.about__portrait{aspect-ratio:1/1}
+
+/* Featured: one rule across both columns, so the label and the first fact start on the same line */
+.featured__body{margin-top:40px;padding-top:24px;border-top:1px dotted var(--muted)}
+.featured .kv{border-top:0}
+.featured .kv li:first-child{padding-top:0}
+.featured__title{margin-top:14px}
+
+/* Fact lists: label and value next to each other instead of at opposite ends */
+.kv li{display:grid;grid-template-columns:132px minmax(0,1fr);justify-content:start}
+.kv li span:last-child{text-align:left}
+
+/* Fact strips under the hero and on project pages: four equal cells with dividers */
+.glance,.facts{gap:0}
+.glance > div,.facts > div{padding-right:24px}
+.glance > div + div,.facts > div + div{padding-left:24px;border-left:1px solid var(--line)}
+
+/* Rows: the dividers and the dotted rule above them now share one width */
+.rows{margin-inline:-12px}
+.row{margin-inline:0}
+
+
+/* --- Small pieces of markup added since the design --- */
+.links__tabs{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
+.links__tab{justify-content:center}
+.links__link{display:flex;flex:1;min-width:0;align-items:center;gap:6px;color:inherit;text-decoration:none}
+.seg__opt{position:relative}
+.seg__opt:has(input:checked){background:var(--h);color:var(--on-h);text-decoration:none}
+.seg__opt:has(input:focus-visible){outline:2px solid var(--link);outline-offset:3px}
+.afig img{display:block;width:100%;border-radius:4px}
+
+@media (max-width:960px){
+  .featured__body{grid-template-columns:minmax(0,1fr);row-gap:36px}
+  .featured .kv{border-top:1px dotted var(--muted)}
+  .featured .kv li:first-child{padding-top:14px}
+}
+@media (max-width:860px){
+  .nav__inner{justify-content:space-between;gap:0}
+  .nav__mark{margin-inline:0;font-size:24px}
+  .nav__lang{position:static;translate:none;margin-left:auto;padding:14px 10px}
+  .nav__lang~.nav__menu{margin-left:0}
+  .hero{padding-top:72px}
+  .hero__copy{padding-top:40px}
+  .phead,.bhead,.ahead,.notfound{padding-top:120px}
+  .about__grid,.contact__grid{grid-template-columns:minmax(0,1fr)}
+  .about__portrait{aspect-ratio:4/5}
+  .glance,.facts{row-gap:28px}
+  .glance > div:nth-child(odd),.facts > div:nth-child(odd){padding-left:0;border-left:0}
+}
+@media (max-width:480px){
+  .kv li{grid-template-columns:104px minmax(0,1fr)}
+}
+/* =========================================================
+   Motion
+   Ink being laid onto a printed page. Things arrive once, in
+   reading order, by being uncovered; every answer to the hand
+   is a change of ink inside a fixed box. Boxes, radii and
+   neighbours never move, and when the page is still and
+   nothing is hovered, nothing is running.
+
+   1  Arrival       one-shot entrances (page heads on load, the rest on scroll)
+   2  Interaction   hover / focus / press
+   3  State         nav bar, mobile menu, tab block, form, section label
+   4  Scroll        grain drift in the plates, reading bar on posts
+   5  Guards        reduced motion, print
+
+   Rules of the house:
+   - transform, opacity, clip-path and colour only; never a layout property.
+   - Three independent properties so effects never fight on one element:
+     arrivals use `translate` / `scale` / `clip-path` / `opacity` in keyframes,
+     hover uses `transform`, the scroll drift uses `translate` on the grain only.
+   - Arrivals are @keyframes with `backwards` fill, so they hold their hidden
+     start through the delay and let go completely when they finish.
+   - Nothing is hidden unless the script that will reveal it has run: every
+     "before" state is written against html[data-rv-on] (set by reveal-script.tsx).
+   Durations, distances and curves are the motion tokens on .page at the top of this file.
+   ========================================================= */
+@keyframes fade{from{opacity:0}}
+@keyframes fade-out{to{opacity:0}}
+@keyframes up{from{opacity:0;translate:0 var(--rise)}}
+@keyframes up-s{from{opacity:0;translate:0 var(--rise-s)}}
+@keyframes line-up{from{transform:translateY(120%)}}
+@keyframes frame-wipe{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+@keyframes frame-settle{from{scale:var(--frame-zoom)}}
+@keyframes rule-draw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
+@keyframes plate-drift{from{translate:0 calc(-1*var(--drift))}to{translate:0 var(--drift)}}
+@keyframes read{from{transform:scaleX(0)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes arrow-out{45%{transform:translate(4px,-4px);opacity:0}46%{transform:translate(-4px,4px);opacity:0}}
+@property --btn-angle{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes btn-orbit{to{--btn-angle:360deg}}
+
+/* ---------------------------------------------------------
+   1  Arrival
+   --------------------------------------------------------- */
+
+/* Masks. A heading line (.line, display:block) or a title word (.w) is a window its text rises
+   through. The window is a clip-path that reaches past the box, not overflow:hidden, so it costs
+   no layout, keeps descenders, and never crops a long word sideways. */
+.line{display:block;clip-path:inset(-.1em -100vmax -.18em)}
+.line>span{display:block}
+.w,.w>span{display:inline-block}
+.w{clip-path:inset(-.1em -100vmax -.18em)}
+
+/* Frame sizes: wide frames take a little longer to open than small ones. */
+.plate,.field,.afig__frame{--w:var(--in-wipe-s)}
+.hero__art,.featured__frame,.pcover,.acover{--w:var(--in-wipe)}
+.afig__frame{overflow:hidden;border-radius:4px}
+
+@media (prefers-reduced-motion:no-preference){
+  /* --- Page heads: pure CSS, so they play before hydration and without JavaScript.
+     Every delay is multiplied by --k, which halves after a client-side navigation. --- */
+
+  /* Home hero: eyebrow, the three headline lines, copy, actions, links; the plate opens alongside. */
+  .hero__eyebrow{animation:fade .5s var(--ease-out) backwards}
+  .hero__title .line>span{animation:line-up var(--in-mask) var(--ease-out) calc((80ms + var(--i,0)*80ms)*var(--k)) backwards}
+  .hero__intro{--ld:380ms}
+  .hero__actions{--ld:450ms}
+  .hero__label{--ld:520ms}
+  .hero .links{--ld:580ms}
+  .hero__intro,.hero__actions,.hero__label,.hero .links{animation:up var(--in-text) var(--ease-out) calc(var(--ld)*var(--k)) backwards}
+  .hero__art{--dl:calc(120ms*var(--k))}
+
+  /* Inner pages: label, title word by word, intro, then the cover. */
+  :is(.phead,.ahead) .back,.phead__label,.ahead__meta,.bhead .wrap>.t-meta,.notfound>.t-meta{animation:fade .5s var(--ease-out) backwards}
+  .w>span{animation:line-up var(--in-mask) var(--ease-out) calc((80ms + min(var(--i,0),8)*35ms)*var(--k)) backwards}
+  .phead__intro,.ahead__lede,.bhead__sub,.notfound>p:not(.t-meta){animation:up var(--in-text) var(--ease-out) calc(360ms*var(--k)) backwards}
+  .phead__actions{animation:fade var(--in-text-s) var(--ease-out) calc(700ms*var(--k)) backwards}
+  .pcover,.acover,.bfeat__plate{--dl:calc(300ms*var(--k))}
+  .bfeat>div{animation:up var(--in-text) var(--ease-out) calc(420ms*var(--k)) backwards}
+  .notfound .btn{animation:fade var(--in-text-s) var(--ease-out) calc(460ms*var(--k)) backwards}
+  /* Article text is simply there: one fade for the whole column, never anything per paragraph. */
+  .prose{animation:fade var(--in-text-s) var(--ease-out) calc(300ms*var(--k)) backwards}
+
+  /* Fact strips: the dotted rule draws, then the cells tick in. */
+  .glance{--ld:650ms;--cells:720ms}
+  .facts{--ld:480ms;--cells:560ms}
+  :is(.glance,.facts)>div{animation:up-s var(--in-text-s) var(--ease-out) calc((var(--cells) + var(--i,0)*40ms)*var(--k)) backwards}
+  :is(.glance,.facts)>div:nth-child(2){--i:1}
+  :is(.glance,.facts)>div:nth-child(3){--i:2}
+  :is(.glance,.facts)>div:nth-child(4){--i:3}
+
+  /* After a client-side navigation the new page fades in (opacity only: <main> holds a fixed
+     reading bar on posts, which a transform here would break) and its head plays at double pace. */
+  html[data-routed] .page{--k:.5}
+  html[data-routed] main{animation:fade var(--in-page) var(--ease-out) backwards}
+
+  /* --- Scroll reveals. reveal-script.tsx sets data-in the first time an element enters the
+     viewport, plus --d, its place in the stagger; --d0 is an extra delay set in the markup.
+     data-now marks what was already above the viewport: it is shown without playing. --- */
+  [data-rv]{--dl:calc(var(--d,0ms) + var(--d0,0ms))}
+
+  html[data-rv-on] :is([data-rv=up],[data-rv=up-s],[data-rv=fade]):not([data-in]){opacity:0}
+  /* The post list's rows carry an inline opacity from the motion library; the hidden state has to outrank it. */
+  html[data-rv-on] .row[data-rv]:not([data-in]){opacity:0!important}
+  [data-rv=up][data-in]:not([data-now]){animation:up var(--in-text) var(--ease-out) var(--dl) backwards}
+  [data-rv=up-s][data-in]:not([data-now]){animation:up-s var(--in-text-s) var(--ease-out) var(--dl) backwards}
+  [data-rv=fade][data-in]:not([data-now]){animation:fade var(--in-text-s) var(--ease-out) var(--dl) backwards}
+
+  /* Section headings rise out of their own baseline; no fade. */
+  html[data-rv-on] [data-rv=mask]:not([data-in]) .line>span{transform:translateY(120%)}
+  [data-rv=mask][data-in]:not([data-now]) .line>span{animation:line-up var(--in-mask) var(--ease-out) var(--dl) backwards}
+
+  /* Frames are uncovered top to bottom while the picture inside settles from 1.06 to 1 and keeps
+     gliding a moment after the edge has finished. The placeholder label fades in at the end.
+     One selector covers the three ways a frame is triggered: on load (.rv-load), on scroll
+     (data-rv=wipe), or by its card (data-rv=card). The frame box and its radius are untouched. */
+  html[data-rv-on] [data-rv=wipe]:not([data-in]),
+  html[data-rv-on] [data-rv=card]:not([data-in]) .item__plate{clip-path:inset(0 0 100% 0)}
+  :is(.rv-load,[data-rv=wipe][data-in]:not([data-now]),[data-rv=card][data-in]:not([data-now]) .item__plate){animation:frame-wipe var(--w) var(--ease-out) var(--dl,0ms) backwards}
+  :is(.rv-load,[data-rv=wipe][data-in]:not([data-now]),[data-rv=card][data-in]:not([data-now]) .item__plate) :is(.plate__img,img){animation:frame-settle calc(var(--w) + .25s) var(--ease-out) var(--dl,0ms) backwards}
+  :is(.rv-load,[data-rv=wipe][data-in]:not([data-now]),[data-rv=card][data-in]:not([data-now]) .item__plate) .plate__slot{animation:fade .35s linear calc(var(--dl,0ms) + var(--w) - .35s) backwards}
+
+  /* Work cards arrive as one unit: the plate opens, the text under it follows 150ms behind.
+     The link itself is never moved, so its focus ring and hit area are stable from first paint. */
+  html[data-rv-on] [data-rv=card]:not([data-in])>:not(.item__plate){opacity:0}
+  [data-rv=card][data-in]:not([data-now])>:not(.item__plate){animation:up var(--in-text) var(--ease-out) calc(var(--dl) + 150ms) backwards}
+
+  /* Dotted rules draw left to right. A border cannot be clipped by itself, so while the script is
+     armed the real border goes transparent (same width, no layout change) and an identical rule is
+     painted on top by ::after, which can be. Clipped, not scaled, so the dot spacing never stretches. */
+  html[data-rv-on] [data-rv=rule],.glance,.facts{position:relative;border-top-color:transparent}
+  html[data-rv-on] [data-rv=rule]::after,:is(.glance,.facts)::after{content:'';position:absolute;inset:-1px 0 auto;border-top:1px dotted var(--muted);pointer-events:none}
+  html[data-rv-on] [data-rv=rule]:not([data-in])::after{clip-path:inset(0 100% 0 0)}
+  [data-rv=rule][data-in]:not([data-now])::after{animation:rule-draw var(--in-rule) var(--ease-out) var(--dl) backwards}
+  :is(.glance,.facts)::after{animation:rule-draw var(--in-rule) var(--ease-out) calc(var(--ld)*var(--k)) backwards}
+  /* Only the first case-study section has a dotted rule; the solid hairlines of the others belong to their sections. */
+  html[data-rv-on] .psec[data-rv=rule]:not(:first-child){border-top-color:var(--line)}
+  html[data-rv-on] .psec[data-rv=rule]:not(:first-child)::after{content:none}
+}
+/* The featured fact list only has its own rule once the columns stack. */
+@media (min-width:961px){html[data-rv-on] .featured .kv[data-rv=rule]::after{content:none}}
+
+/* ---------------------------------------------------------
+   2  Interaction
+   One switch. Hover, keyboard focus and (for fills) press set --on to 1 on the element; the fills,
+   lines, colours and small moves below all derive from it, so every state answers the same way.
+   Hover sits behind (hover:hover) so a tap on a touch screen cannot leave a stuck state; nothing
+   here carries information that is only reachable by hovering.
+   --from / --curve flip with the state: ink enters from one side on ease-out and leaves through
+   the other on an exit curve, so it passes through instead of rewinding.
+   --------------------------------------------------------- */
+@media (hover:hover){
+  :is(.row,.pnext,.pager a,.tags a,.links__link,.t-link,.item,.bfeat,.back,.nav__link,.foot__nav a,.foot__social a,a.contact__val):hover{--on:1;--from:left;--from-rev:right;--curve:var(--ease-out)}
+}
+:is(.row,.pnext,.pager a,.tags a,.links__link,.t-link,.item,.bfeat,.back,.nav__link,.foot__nav a,.foot__social a,a.contact__val):focus-visible,
+:is(.row,.pnext,.pager a,.tags a,.links__link):active,
+.nav__link:is([data-current],[aria-current=page]){--on:1;--from:left;--from-rev:right;--curve:var(--ease-out)}
+/* Press jumps the fill to full. On touch it is the only state there is, so it gets long enough to be seen before the page changes. */
+:is(.row,.pnext,.pager a,.tags a):active{--wipe-in:var(--t-press)}
+@media (hover:none){:is(.row,.pnext,.pager a,.tags a):active{--wipe-in:.16s}}
+
+/* Fills (::before, behind the text) and lines (::after) share one mechanism. */
+.row,.pnext,.pager a,.tags a,.links__open{position:relative;isolation:isolate}
+.pager a,.tags a,.links__open{overflow:hidden} /* keeps the fill inside the box's own radius */
+.tags a,.links__link{--wipe-in:var(--t-mid);--wipe-out:var(--t-fast)}
+.foot__nav a,.foot__social a,a.contact__val{position:relative}
+:is(.row,.pnext,.pager a,.tags a,.links__open)::before,
+:is(.nav__link,.foot__nav a,.foot__social a,a.contact__val)::after{content:'';position:absolute;pointer-events:none;background:var(--h);transform:scaleX(var(--on,0));transform-origin:var(--from,right);transition:transform calc(var(--wipe-out) + var(--on,0)*(var(--wipe-in) - var(--wipe-out))) var(--curve,var(--ease-exit))}
+:is(.row,.pnext,.pager a,.tags a,.links__open)::before{inset:0;z-index:-1}
+a.row::before{bottom:-1px} /* covers the row's own hairline, as the old background did */
+.pager a:first-child::before{transform-origin:var(--from-rev,left)} /* "Previous" fills from the right */
+:is(.nav__link,.foot__nav a,.foot__social a,a.contact__val)::after{left:0;right:0;height:1px}
+.nav__link{position:relative}
+.nav__link::after{bottom:8px}
+:is(.foot__nav a,.foot__social a)::after{bottom:-4px}
+a.contact__val::after{bottom:2px}
+:is(.row,.pnext,.pager a):focus-visible{outline-color:var(--white)}
+
+/* Rows, next project, pager, tags: the text inverts as the edge of the fill passes it (delays on the way in only). */
+.row__title{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--white));transform:translateX(calc(var(--on,0)*var(--d-title)));transition:color var(--t-fast) var(--ease) calc(var(--on,0)*var(--stag)*40ms),transform calc(var(--wipe-out) + var(--on,0)*(var(--wipe-in) - var(--wipe-out))) var(--ease-out)}
+.row__meta{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--muted));transition:color var(--t-fast) var(--ease) calc(var(--on,0)*var(--stag)*110ms)}
+.row__end{transition-delay:calc(var(--on,0)*var(--stag)*170ms)}
+.row__arrow{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--link))}
+.pnext__title,.pager a .t-lead{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--white));transition:color var(--t-fast) var(--ease) calc(var(--on,0)*var(--stag)*40ms)}
+.pnext .t-meta,.pager a .t-meta{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--muted));transition:color var(--t-fast) var(--ease) calc(var(--on,0)*var(--stag)*40ms)}
+.pnext .t-ui{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--white));transition:color var(--t-fast) var(--ease) calc(var(--on,0)*var(--stag)*170ms)}
+.tags a{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--white));transition:color var(--t-fast) var(--ease) calc(var(--on,0)*var(--stag)*60ms)}
+
+/* Arrows: one rule for every arrow glyph. It travels 4px the way it points, inside its link's box; nothing else moves. */
+.arr,.row__arrow{display:inline-block;transform:translateX(calc(var(--on,0)*var(--dir,1)*var(--d-glyph)));transition:transform calc(var(--t-fast) + var(--on,0)*(var(--t-mid) - var(--t-fast))) var(--ease-out)}
+.row__arrow{transition-property:transform,color;transition-duration:calc(var(--t-fast) + var(--on,0)*(var(--t-mid) - var(--t-fast))),var(--t-fast);transition-delay:0s,calc(var(--on,0)*var(--stag)*230ms)}
+.back .arr,.pager a:first-child .arr{--dir:-1}
+.back:focus-visible{color:var(--link)}
+
+/* Navigation, footer and contact links: colour, plus the line drawn by the shared mechanism above. */
+:is(.nav__link,.nav__mark,.foot__mark,.foot__nav a,.foot__social a,a.contact__val):focus-visible{color:var(--link)}
+/* "Current section" (line only) reads differently from "current page" (line and colour). */
+.nav__panel a:is([data-current],[aria-current=page]){color:var(--link)}
+
+/* Inline UI links: the underline leaves to the right and a fresh one draws in from the left.
+   Two transform-scaled lines; at rest ::before is the same 1px line at the offset the text-decoration had. */
+.t-link::before,.t-link::after{content:'';position:absolute;left:0;right:0;bottom:calc(.17em - 5px);height:1px;background:var(--h);pointer-events:none}
+/* Both lines only take time on the way in. On leave they swap in the same frame, so the underline
+   looks continuous instead of blinking off and regrowing. */
+.t-link::before{transform:scaleX(calc(1 - var(--on,0)));transform-origin:right;transition:transform calc(var(--on,0)*var(--t-fast)) var(--ease-exit)}
+.t-link::after{transform:scaleX(var(--on,0));transform-origin:left;transition:transform calc(var(--on,0)*var(--t-slow)) var(--ease-out) calc(var(--on,0)*var(--stag)*.1s)}
+.t-link:focus-visible,:is(.item,.bfeat):focus-visible .t-link{color:var(--link)}
+/* Touch has no hover: a tap answers with colour on the controls that have no fill of their own. */
+:is(.t-link,.nav__panel a,.foot__nav a,.foot__social a,a.contact__val):active{color:var(--link)}
+.links__tab:not([aria-selected='true'],[aria-pressed='true']):active{background:rgb(240 234 223/.13)}
+/* Running text keeps a real underline (it wraps): colour only. */
+.prose a{transition:color var(--t-fast) var(--ease),text-decoration-color var(--t-fast) var(--ease)}
+.prose a:focus-visible{color:var(--link)}
+
+/* Cards: the frame stays put, the picture inside it grows slowly; the label on top stays still. */
+.plate__img{transition:transform var(--t-image) var(--ease-out)}
+.field__shot{transition:transform var(--t-image) var(--ease-out),opacity .6s var(--ease-out)}
+:is(.item,.bfeat) :is(.plate__img,.field__shot){transform:scale(calc(1 + var(--on,0)*(var(--img-scale) - 1)))}
+:is(.item,.bfeat):active :is(.plate__img,.field__shot){transform:scale(min(1.02,var(--img-scale)));transition-duration:.16s}
+:is(.item:focus-visible .item__title,.bfeat:focus-visible .bfeat__title){color:var(--link)}
+@media (hover:hover){
+  .item:hover .item__title,.bfeat:hover .bfeat__title,:is(.item,.bfeat):hover .t-link{color:var(--link)}
+}
+/* A picture that was still loading when the page became interactive fades in over its frame (frame-image.tsx). */
+.field__shot[data-pending]{opacity:0}
+
+/* Buttons never move or grow. A small light travels round the inside of the edge instead, in a
+   1.5px ring that lies within the button, so it cannot touch a neighbouring button. The animation
+   is always attached but paused: on leave the light fades out where it is, and resumes from there. */
+.btn{--btn-light:var(--white)}
+.btn--bone{--btn-light:var(--h)}
+.btn::before{content:"";position:absolute;inset:0;padding:1.5px;border-radius:inherit;pointer-events:none;opacity:0;
+  background:conic-gradient(from var(--btn-angle),transparent 0 55%,color-mix(in srgb,var(--btn-light) 35%,transparent) 78%,var(--btn-light) 92%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  transition:opacity var(--t-slow) var(--ease);animation:btn-orbit var(--orbit) linear infinite paused}
+@media (hover:hover){.btn:hover:not([disabled])::before{opacity:1;animation-play-state:running}}
+.btn:focus-visible:not([disabled])::before{opacity:1;animation-play-state:running}
+/* Press: a full inner ring flashes and the fill steps one shade. */
+.btn::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 1.5px var(--btn-light);opacity:0;transition:opacity var(--t-mid) var(--ease)}
+.btn:active:not([disabled])::after{opacity:.55;transition-duration:var(--t-press)}
+.btn--wash:active{background:rgb(240 234 223/.16)}
+.btn--bone:active{background:var(--white)}
+.btn--hue:active{background:color-mix(in srgb,var(--h) 78%,#fff)}
+/* Link buttons keep their own text colour on hover (the global `a:hover{color:inherit}` otherwise wins
+   and turns the label of the light button nearly white on white). */
+.btn--bone:hover{color:#14100e}
+.btn--hue:hover{color:var(--on-h)}
+.btn--wash:hover{color:var(--white)}
+/* While a form is being sent the same light is the progress indicator, at a quicker lap. */
+.btn[aria-busy='true']{opacity:1;cursor:progress}
+.btn[aria-busy='true']::before{opacity:1;animation-play-state:running;animation-duration:1.6s}
+
+/* Find me on: the address types itself out and the whole row is a link. The chip fills by the
+   shared wipe; its arrow leaves up-right and comes back in from bottom-left, once, clipped by the chip. */
+.caret{display:inline-block;width:.55em;height:1.05em;margin-left:1px;vertical-align:-.18em;background:var(--h);animation:blink 1s steps(1) infinite}
+/* Typing done: two more blinks, then it fades. There is no caret at rest. */
+.caret--out{animation:blink 1s steps(1) 2,fade-out var(--t-mid) var(--ease) 2s forwards}
+.links__text{text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:color var(--t-fast) var(--ease),text-decoration-color var(--t-fast) var(--ease)}
+.links__open{color:color-mix(in srgb,var(--on-h) calc(var(--on,0)*100%),var(--link));transition:color var(--t-fast) var(--ease) calc(var(--on,0)*var(--stag)*60ms)}
+.links__link:focus-visible{outline-offset:6px}
+.links__link:focus-visible .links__text{color:var(--link);text-decoration-color:var(--h)}
+@media (hover:hover){.links__link:hover .links__text{color:var(--link);text-decoration-color:var(--h)}}
+@media (prefers-reduced-motion:no-preference){
+  .links__link:focus-visible .links__arrow{animation:arrow-out var(--t-mid) var(--ease-inout)}
+  @media (hover:hover){.links__link:hover .links__arrow{animation:arrow-out var(--t-mid) var(--ease-inout)}}
+}
+
+/* Form fields: ring, label and placeholder answer focus together. All inset; the box is untouched. */
+.input{caret-color:var(--h);transition:box-shadow var(--t-fast) var(--ease),background var(--t-fast) var(--ease),opacity var(--t-fast) var(--ease)}
+.input::placeholder{transition:color var(--t-fast) var(--ease)}
+.input:focus::placeholder{color:rgb(240 234 223/.3)}
+.input:user-invalid{box-shadow:inset 0 0 0 1px var(--link)}
+.input:user-invalid:focus{box-shadow:inset 0 0 0 1px var(--h)} /* focus still wins */
+.form__label{transition:color var(--t-fast) var(--ease)}
+.form__field:focus-within .form__label{color:var(--white)}
+
+/* ---------------------------------------------------------
+   3  State
+   --------------------------------------------------------- */
+
+/* Nav bar. Past 24px of scroll it goes from the open 96px look to a 72px bar with a background.
+   The header box is 72px in both states: at the top the row sits 12px lower and the mark is at
+   full size; compact, the row moves up and the mark scales to 22/26. Transforms only.
+   The background and its hairline are layers that fade in; the hairline draws outward from the mark. */
+.nav::before,.nav::after{content:'';position:absolute;z-index:-1;pointer-events:none;opacity:0;transition:opacity var(--t-mid) var(--ease),transform var(--t-slow) var(--ease-out)}
+.nav::before{inset:0;background:var(--paper)}
+.nav::after{inset:100% 0 auto;height:1px;background:var(--line);transform:scaleX(.6)}
+.nav--compact::before,.nav--compact::after{opacity:1;transform:none}
+@media (min-width:861px){
+  .nav__inner{transform:translateY(12px);transition:transform var(--t-slow) var(--ease-inout)}
+  .nav__mark{transition:color var(--t-fast) var(--ease),transform var(--t-slow) var(--ease-inout)}
+  .nav--compact .nav__inner{transform:none}
+  .nav--compact .nav__mark{transform:scale(.846)}
+}
+
+/* Mobile menu. The panel is always in the DOM, hanging under the bar; opening uncovers it top-down
+   and its links follow, closing clips it back up. `visibility` flips after the close has played,
+   which also takes the links out of the tab order while it is shut. */
+@media (max-width:860px){
+  .nav__panel{position:absolute;inset:100% 0 auto;clip-path:inset(0 0 100% 0);visibility:hidden;transition:clip-path var(--t-mid) var(--ease-exit),visibility 0s var(--t-mid)}
+  .nav__panel[data-open]{clip-path:inset(0);visibility:visible;transition:clip-path var(--t-slow) var(--ease-out),visibility 0s}
+  .nav__panel a{opacity:0;translate:0 var(--rise-s);transition:opacity .12s linear,translate 0s .12s}
+  .nav__panel[data-open] a{opacity:1;translate:none;transition:opacity var(--in-text-s) var(--ease-out),translate var(--in-text-s) var(--ease-out);transition-delay:calc(var(--stag)*(80ms + var(--i,0)*40ms))}
+}
+/* The icon is three strokes: the outer two turn into the cross, the middle one fades. All inside the 44px button. */
+.nav__menu{transition:background var(--t-press) linear}
+.nav__menu:active{background:var(--wash)}
+.nav__menu path{transform-box:fill-box;transform-origin:center;transition:transform var(--t-mid) var(--ease-inout),opacity var(--t-mid) var(--ease)}
+.nav__menu[aria-expanded='true'] path:nth-child(1){transform:translateY(4px) rotate(45deg)}
+.nav__menu[aria-expanded='true'] path:nth-child(2){opacity:0}
+.nav__menu[aria-expanded='true'] path:nth-child(3){transform:translateY(-4px) rotate(-45deg)}
+
+/* Tabs (Find me on, contact reason, post filter): one vermilion block slides from the old tab to
+   the new one. It is a full-size layer behind the labels whose visible window is a clip-path, so
+   it travels as one solid rectangle (no stretch) and its ends are rounded by the track itself.
+   use-indicator.ts measures the selected tab and sets data-ind; until then (or without JavaScript)
+   the selected tab keeps its own background, which looks identical at rest. */
+.links__tabs,.form__seg,.filters,.rows{position:relative}
+.links__ind{position:absolute;inset:0;border-radius:4px;overflow:hidden;pointer-events:none}
+.filters .links__ind{inset:4px}
+[data-ind] .links__ind::before{content:'';position:absolute;inset:0;background:var(--h);clip-path:inset(0 var(--ind-r,100%) 0 var(--ind-l,0px));transition:clip-path var(--t-slow) var(--ease-inout)}
+[data-ind-still] .links__ind::before{transition:none}
+/* The label changes colour as the block arrives, not when the click lands. */
+[data-ind] .links__tab{position:relative;z-index:1;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease) calc(var(--t-slow)*.3)}
+[data-ind] :is(.links__tab[aria-selected='true'],.links__tab[aria-pressed='true'],.seg__opt:has(input:checked)){background:transparent}
+
+/* Contact form. Sending dims the fields; success swaps the fields for the confirmation in two
+   beats while the card holds the height it had (set in contact-form.tsx), so nothing below moves. */
+form:has([aria-busy='true']) .input{opacity:.6}
+.form--leaving{opacity:0;transition:opacity var(--t-fast) var(--ease)}
+.form--back{animation:fade var(--t-mid) var(--ease) backwards}
+.form:has(.form__done){display:grid;align-items:center}
+.form__done>*{animation:up-s var(--in-text-s) var(--ease-out) calc(var(--i,0)*var(--step)) backwards}
+.form__done>:nth-child(2){--i:1}
+.form__done>:nth-child(3){--i:2}
+.form__done>:nth-child(4){--i:3}
+.form__err{animation:fade var(--t-mid) var(--ease) backwards}
+
+/* Case study: the label of the section being read lights up (section-spy.tsx sets data-current),
+   and on desktop, where the label is sticky, a short tick draws in under it. */
+.psec__label{transition:color var(--t-slow) var(--ease)}
+.psec[data-current] .psec__label{color:var(--white)}
+@media (min-width:861px){
+  .psec__label::after{content:'';position:absolute;left:0;top:calc(100% + 8px);width:24px;height:1px;background:var(--h);transform:scaleX(0);transform-origin:right;transition:transform var(--t-mid) var(--ease-exit)}
+  .psec[data-current] .psec__label::after{transform:scaleX(1);transform-origin:left;transition:transform var(--t-slow) var(--ease-out)}
+}
+
+/* ---------------------------------------------------------
+   4  Scroll. The only motion tied to scroll position, CSS only; browsers without
+   scroll-driven animations simply show the static page.
+   --------------------------------------------------------- */
+.readbar{display:none}
+@supports (animation-timeline:view()){
+  /* Posts: a 2px line across the top of the viewport that fills as the article is read.
+     It is an indicator moved by the reader's own scroll, so it stays under reduced motion. */
+  main:has(.readbar){timeline-scope:--read}
+  .prose{view-timeline:--read block}
+  .readbar{display:block;position:fixed;inset:0 0 auto;z-index:60;height:2px;pointer-events:none;background:var(--h);transform-origin:0 50%;animation:read linear both;animation-timeline:--read;animation-range:contain 0% contain 100%}
+
+  @media (prefers-reduced-motion:no-preference){
+    /* Plates: the grain drifts a few percent inside its fixed frame while the plate crosses the
+       viewport. The timeline is named on the frame because the frame clips its content: a plain
+       view() on the grain would track the frame's own box and never progress. */
+    .plate{view-timeline:--frame block}
+    .plate__img{animation:plate-drift linear both;animation-timeline:--frame}
+    /* A plate that is also arriving needs both animations in one declaration (the shorthand is not additive). */
+    :is(.rv-load,[data-rv=wipe][data-in]:not([data-now]),[data-rv=card][data-in]:not([data-now]) .item__plate) .plate__img{animation:frame-settle calc(var(--w) + .25s) var(--ease-out) var(--dl,0ms) backwards,plate-drift linear both;animation-timeline:auto,--frame}
+  }
+}
+
+/* ---------------------------------------------------------
+   5  Guards
+   --------------------------------------------------------- */
+/* Reduced motion: the reveal script does not arm and every arrival above sits behind
+   (prefers-reduced-motion:no-preference). Here the tokens collapse travel and long durations, so
+   fills, lines, the tab block and the nav bar become instant state changes; --t-fast stays, so
+   colours still fade. */
+@media (prefers-reduced-motion:reduce){
+  .page{--t-press:0s;--t-mid:0s;--t-slow:0s;--t-image:0s;--d-glyph:0px;--d-title:0px;--rise:0px;--rise-s:0px;--img-scale:1;--stag:0}
+  /* The light does not travel: the whole ring shows instead. */
+  .btn::before{animation:none;background:var(--btn-light)}
+  .btn:is(:hover,:focus-visible):not([disabled])::before,.btn[aria-busy='true']::before{opacity:.7}
+  .nav__panel[data-open] a{transition-duration:var(--t-fast)}
+  /* The two fills with their own clocks, and the touch press, collapse too. */
+  .tags a,.links__link{--wipe-out:0s}
+  :is(.row,.pnext,.pager a,.tags a):active{--wipe-in:0s}
+}
+/* Paper has no scroll position: everything is simply there. */
+@media print{
+  [data-rv],[data-rv] *,[data-rv]::after{opacity:1!important;clip-path:none!important;transform:none!important;animation:none!important}
+  /* Same specificity as the rows' own hidden state (which is !important too), and later, so it wins. */
+  html[data-rv-on] .row[data-rv]:not([data-in]){opacity:1!important}
+  /* The blanket rule above must not turn the grain up to full strength. */
+  [data-rv] .plate__img{opacity:.3!important}
+  .readbar{display:none}
+}
+
+/* Website screenshots are cropped from the top, so the site header stays in view */
+.featured__frame .field__shot,.pcover .field__shot{object-position:top center}
