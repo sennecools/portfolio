@@ -206,7 +206,7 @@ export default async function HomePage({ params }: Props) {
               {t.home.about}
             </Rise>
             {hasCv && (
-              <a className="t-ui t-link head-row__link" href={cv} download {...rv("fade", { d0: 200 })}>
+              <a className="t-ui t-link head-row__link" href={cv} target="_blank" rel="noopener" {...rv("fade", { d0: 200 })}>
                 {t.home.downloadCv}
               </a>
             )}
