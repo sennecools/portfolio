@@ -4,6 +4,9 @@ import { project as beyondTalent } from "./projects/beyond-talent";
 import { project as beyondTalentAts } from "./projects/beyond-talent-ats";
 import { project as diffrast } from "./projects/diffrast";
 import { project as packctl } from "./projects/packctl";
+import { project as sensAdditions } from "./projects/sens-additions";
+import { project as simpleEconomy } from "./projects/simple-economy";
+import { project as starlinkTracker } from "./projects/starlink-tracker";
 import { project as taskboard } from "./projects/taskboard";
 import type { ProjectSource } from "./types";
 
@@ -16,7 +19,10 @@ export const projects: ProjectSource[] = [
   astrum,
   betterTablist,
   diffrast,
+  starlinkTracker,
   packctl,
   beyondTalent,
   taskboard,
+  simpleEconomy,
+  sensAdditions,
 ];
