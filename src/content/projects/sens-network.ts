@@ -15,7 +15,7 @@ export const project: ProjectSource = {
     en: "Sen’s Network is the website for the modded Minecraft servers I run. Players find the servers there, see whether they are online and read the news. I manage it all from an admin page.",
     nl: "Sen’s Network is de website van de modded Minecraft-servers die ik draai. Spelers vinden er de servers, zien of ze online zijn en lezen het nieuws. Ik beheer alles vanuit een beheerpagina.",
   },
-  role: { en: "Solo developer", nl: "Enige developer" },
+  role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2025–26",
   status: "Live",
   stack: "Next.js · PostgreSQL",

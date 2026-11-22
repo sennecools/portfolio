@@ -14,7 +14,7 @@ export const project: ProjectSource = {
     en: "Simple Economy adds money and player shops to a Minecraft server. Players earn and pay coins, set up shops, and browse every shop on the server from a menu. It only runs on the server, so players need nothing extra.",
     nl: "Simple Economy voegt geld en spelerswinkels toe aan een Minecraft-server. Spelers verdienen en betalen munten, openen winkels en bekijken elke winkel op de server vanuit een menu. De mod draait alleen op de server, dus spelers hoeven niets te installeren.",
   },
-  role: { en: "Sole developer", nl: "Enige developer" },
+  role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2026",
   status: { en: "~900 downloads", nl: "~900 downloads" },
   stack: "Java · NeoForge",

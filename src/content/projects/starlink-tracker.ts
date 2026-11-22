@@ -14,7 +14,7 @@ export const project: ProjectSource = {
     en: "Starlink Tracker draws the whole Starlink constellation on a 3D globe and moves every satellite in real time. You can spin the Earth, click a satellite to follow it and fly in close enough to see a 3D model of it.",
     nl: "Starlink Tracker tekent de volledige Starlink-constellatie op een 3D-wereldbol en beweegt elke satelliet in realtime. Je kan de aarde draaien, op een satelliet klikken om hem te volgen en zo dicht invliegen dat je er een 3D-model van ziet.",
   },
-  role: { en: "Sole developer", nl: "Enige developer" },
+  role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2026",
   status: "Live",
   stack: "TypeScript · CesiumJS · Web Workers",

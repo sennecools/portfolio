@@ -5,6 +5,7 @@ import { Frame } from "@/components/frame";
 import { Rise, Words } from "@/components/rise";
 import { rv } from "@/components/rv";
 import { SectionSpy } from "@/components/section-spy";
+import { Showcase, type ShowcaseSlide } from "@/components/showcase";
 import { projects } from "@/content/projects";
 import { isLocale, localePath, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionary";
@@ -42,6 +43,11 @@ export default async function ProjectPage({ params }: Props) {
   const t = getDictionary(locale);
   const next = getNextProject(project.slug, getProjects(locale));
   const [primary, ...secondary] = project.links;
+  // The cover and every gallery image that exists, shown together in the slideshow up top.
+  const slides: ShowcaseSlide[] = [
+    ...(project.cover ? [{ src: project.cover, alt: project.coverAlt ?? project.title }] : []),
+    ...project.gallery.flatMap((g) => (g.src ? [{ src: g.src, alt: g.alt ?? g.caption, caption: g.caption }] : [])),
+  ];
 
   const facts = [
     { label: t.facts.role, value: project.role },
@@ -89,15 +95,23 @@ export default async function ProjectPage({ params }: Props) {
           )}
         </header>
         <div className="wrap pcover-wrap">
-          <Frame
-            variant="plate"
-            className="pcover"
-            src={project.cover}
-            alt={project.coverAlt}
-            label={`${project.title} — ${project.kind}`}
-            priority
-            reveal="load"
-          />
+          {slides.length > 1 ? (
+            <Showcase
+              slides={slides}
+              label={`${project.title} — ${t.project.gallery}`}
+              labels={{ previous: t.project.previous, next: t.project.next, slide: t.project.slide }}
+            />
+          ) : (
+            <Frame
+              variant="plate"
+              className="pcover"
+              src={project.cover}
+              alt={project.coverAlt}
+              label={`${project.title} — ${project.kind}`}
+              priority
+              reveal="load"
+            />
+          )}
         </div>
       </div>
 
@@ -157,7 +171,7 @@ export default async function ProjectPage({ params }: Props) {
             </section>
           )}
 
-          {project.gallery.length > 0 && (
+          {slides.length <= 1 && project.gallery.length > 0 && (
             <div className="pgallery">
               {project.gallery.map((g) => (
                 <figure key={g.caption}>

@@ -13,7 +13,7 @@ export const project: ProjectSource = {
     en: "diffrast renders 3D models in PyTorch and works out, for every pixel, how the image would change if the model changed. That lets a program fit a model to pictures automatically: its shape, texture, pose or lighting.",
     nl: "diffrast rendert 3D-modellen in PyTorch en berekent voor elke pixel hoe het beeld zou veranderen als het model verandert. Zo kan een programma een model automatisch laten passen bij afbeeldingen: de vorm, textuur, houding of belichting.",
   },
-  role: { en: "Sole developer", nl: "Enige developer" },
+  role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2026",
   status: { en: "Early development, MIT", nl: "Vroege ontwikkeling, MIT" },
   stack: "Python · PyTorch",

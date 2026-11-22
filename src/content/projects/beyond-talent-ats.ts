@@ -1,51 +1,62 @@
 import type { ProjectSource } from "../types";
 
+const shot = (name: string) => `/projects/beyond-talent-ats/${name}.jpg`;
+
 export const project: ProjectSource = {
   slug: "beyond-talent-ats",
   title: "Beyond Talent ATS",
   category: { en: "Client work", nl: "Klantproject" },
-  kind: "Web app",
+  kind: { en: "Applicant tracking system", nl: "Rekruteringssysteem" },
   summary: {
-    en: "The system a Belgian recruitment agency uses to manage its candidates, vacancies and client companies. I built it as the only developer.",
-    nl: "Het systeem waarmee een Belgisch rekrutatiebureau zijn kandidaten, vacatures en klantbedrijven beheert. Ik bouwde het als enige developer.",
+    en: "The applicant tracking system a Belgian recruitment agency runs on: candidates, vacancies, clients, a shared agenda and GDPR retention in one place. I designed, built and run it.",
+    nl: "Het rekruteringssysteem waarop een Belgisch rekrutatiebureau draait: kandidaten, vacatures, klanten, een gedeelde agenda en GDPR-bewaartermijnen op één plek. Ik ontwierp, bouwde en beheer het.",
   },
   intro: {
-    en: "Beyond Talent is a Belgian recruitment agency. This is the system its recruiters work in: every candidate, vacancy and client company, and all contact between them, in one place.",
-    nl: "Beyond Talent is een Belgisch rekrutatiebureau. Dit is het systeem waarin de recruiters werken: elke kandidaat, vacature en klant, en al het contact daartussen, op één plek.",
+    en: "Beyond Talent is a Belgian recruitment agency. This is the system its recruiters work in every day: they follow each candidate through every vacancy, plan interviews together, keep notes for the team and stay within the GDPR, while the agency’s website reads its vacancies from it.",
+    nl: "Beyond Talent is een Belgisch rekrutatiebureau. Dit is het systeem waarin de recruiters elke dag werken: ze volgen elke kandidaat door elke vacature, plannen samen gesprekken, houden notities bij voor het team en blijven binnen de GDPR, terwijl de website van het bureau er zijn vacatures uit haalt.",
   },
-  role: { en: "Sole developer", nl: "Enige developer" },
+  role: { en: "Full-stack developer · freelance", nl: "Full-stack developer · freelance" },
   year: "2025–26",
-  status: { en: "Live", nl: "In gebruik" },
-  stack: "Next.js · PostgreSQL",
+  status: { en: "Live, 840+ commits", nl: "In gebruik, 840+ commits" },
+  stack: "Next.js · TypeScript · PostgreSQL",
   placement: "featured",
   links: [],
-  cover: "/projects/beyond-talent-ats/dashboard.jpg",
+  cover: shot("dashboard"),
   coverAlt: {
-    en: "The ATS dashboard with counts of active vacancies, clients and candidates, and a list of interviews planned for the coming weeks. Shown with fictitious demo data.",
-    nl: "Het overzicht van het ATS met tellers voor actieve vacatures, klanten en kandidaten, en een lijst met gesprekken in de komende weken. Getoond met fictieve demodata.",
+    en: "The dashboard: candidates waiting for review, interviews in the coming four weeks and counts of open vacancies, clients and candidates.",
+    nl: "Het overzicht: kandidaten die op een beoordeling wachten, gesprekken in de komende vier weken en tellers voor vacatures, klanten en kandidaten.",
   },
   context: {
     en: [
-      "A recruiter follows many candidates at once, each at a different stage for a different vacancy. The agency needed one place to keep track of all of it. Because the system stores CVs and personal details, it also has to follow the GDPR.",
+      "A recruiter follows dozens of candidates at once, each in a different stage for a different vacancy, often for several clients. The agency needed one place where the whole team sees where every candidate stands, what happens next and who is talking to whom.",
+      "The system stores CVs and personal details, so privacy is part of the design rather than an afterthought: the GDPR decides how long the agency may keep each candidate’s data, and it is built so more than one agency can use it, each seeing only its own data.",
     ],
     nl: [
-      "Een recruiter volgt veel kandidaten tegelijk op, elk in een andere fase voor een andere vacature. Het bureau had één plek nodig om dat allemaal bij te houden. Omdat het systeem cv’s en persoonsgegevens bewaart, moet het ook de GDPR volgen.",
+      "Een recruiter volgt tientallen kandidaten tegelijk op, elk in een andere fase voor een andere vacature, vaak voor verschillende klanten. Het bureau had één plek nodig waar het hele team ziet waar elke kandidaat staat, wat de volgende stap is en wie met wie praat.",
+      "Het systeem bewaart cv’s en persoonsgegevens, dus privacy zit in het ontwerp en niet achteraf: de GDPR bepaalt hoe lang het bureau de gegevens van elke kandidaat mag houden. Het is ook zo gebouwd dat meerdere bureaus het kunnen gebruiken, elk met alleen hun eigen gegevens.",
     ],
   },
   built: {
     en: [
-      "Recruiters can add and search candidates, vacancies and companies, keep a pool of promising candidates for later, plan appointments in a shared agenda, log calls and emails, and store CVs.",
-      "The system is connected to the agency’s public website, which I also built. A vacancy published here appears on the website, and an application sent through the website arrives here as a new candidate, or is added to the candidate if they are already known.",
+      "Every vacancy has its own pipeline, from new to hired, with stages the agency can rename and reorder. A candidate can be in several vacancies at once, each at its own stage, and the dashboard flags anyone who has sat in the first stage for three days.",
+      "A candidate’s profile brings everything together: upcoming interviews and follow-ups, the vacancies they are in, notes where colleagues can be mentioned with @, and a timeline of every call, email and status change. CVs and documents are stored privately and only served to signed-in users.",
+      "The shared agenda links every appointment to a candidate, vacancy or client, colours it by type and checks whether the recruiter is free. Search with ⌘K finds any candidate, vacancy or company from anywhere in the app.",
+      "The agency’s public website, which I also built, reads its vacancies through an API with a key per agency. Applications sent through the website arrive as candidates, and the system checks for duplicates first.",
     ],
     nl: [
-      "Recruiters kunnen kandidaten, vacatures en bedrijven toevoegen en doorzoeken, een werfreserve bijhouden voor later, afspraken plannen in een gedeelde agenda, telefoons en mails noteren en cv’s bewaren.",
-      "Het systeem is gekoppeld aan de publieke website van het bureau, die ik ook bouwde. Een vacature die hier gepubliceerd wordt, verschijnt op de website, en een sollicitatie via de website komt hier binnen als nieuwe kandidaat, of wordt toegevoegd aan de kandidaat als die al gekend is.",
+      "Elke vacature heeft een eigen pipeline, van nieuw tot aangeworven, met fases die het bureau zelf kan hernoemen en herschikken. Een kandidaat kan in meerdere vacatures tegelijk zitten, elk in een eigen fase, en het overzicht toont wie al drie dagen in de eerste fase staat.",
+      "Het profiel van een kandidaat brengt alles samen: komende gesprekken en opvolging, de vacatures waarvoor hij loopt, notities waarin je collega’s met @ vermeldt, en een tijdlijn van elk telefoontje, elke mail en elke statuswijziging. Cv’s en documenten worden privé bewaard en alleen getoond aan wie ingelogd is.",
+      "De gedeelde agenda koppelt elke afspraak aan een kandidaat, vacature of klant, kleurt ze per soort en controleert of de recruiter vrij is. Met ⌘K vind je vanuit elke pagina elke kandidaat, vacature of elk bedrijf.",
+      "De publieke website van het bureau, die ik ook bouwde, haalt zijn vacatures op via een API met een sleutel per bureau. Sollicitaties via de website komen binnen als kandidaat, en het systeem controleert eerst op dubbels.",
     ],
   },
   stackRows: [
-    { label: "Framework", value: "Next.js, React, TypeScript" },
-    { label: { en: "Data", nl: "Database" }, value: "PostgreSQL" },
-    { label: "Hosting", value: "Vercel" },
+    { label: "Framework", value: "Next.js 16, React 19, TypeScript" },
+    { label: { en: "Data", nl: "Database" }, value: "PostgreSQL, Prisma" },
+    { label: { en: "Files", nl: "Bestanden" }, value: { en: "Vercel Blob, private store for CVs", nl: "Vercel Blob, privé opslag voor cv’s" } },
+    { label: { en: "Background jobs", nl: "Achtergrondtaken" }, value: { en: "Vercel Cron: retention every night, notifications every 5 minutes", nl: "Vercel Cron: bewaartermijnen elke nacht, meldingen elke 5 minuten" } },
+    { label: "Monitoring", value: "Sentry" },
+    { label: "Tests", value: { en: "Vitest, about 800 tests", nl: "Vitest, ongeveer 800 tests" } },
   ],
   challenges: [
     {
@@ -55,40 +66,66 @@ export const project: ProjectSource = {
         nl: "Hoe lang het bureau de gegevens van een kandidaat mag bewaren, hangt onder de GDPR af van wat er met die kandidaat gebeurde. Het systeem berekent wanneer elk dossier vervalt, toont recruiters welke een beslissing nodig hebben en verwijdert vervallen gegevens elke nacht.",
       },
     },
+    {
+      title: { en: "One System, Several Agencies", nl: "Eén systeem, meerdere bureaus" },
+      text: {
+        en: "Every record belongs to an organisation, and the server checks the user’s membership before any query runs, so one agency can never see another’s candidates. That check runs on almost every request, so the result is cached for 30 seconds to keep pages fast.",
+        nl: "Elk gegeven hoort bij een organisatie, en de server controleert het lidmaatschap van de gebruiker voor er ook maar één query loopt, zodat een bureau nooit de kandidaten van een ander ziet. Die controle gebeurt bij bijna elk verzoek, dus het resultaat wordt 30 seconden bewaard om de pagina’s snel te houden.",
+      },
+    },
+    {
+      title: { en: "Notifications Without the Wait", nl: "Meldingen zonder te wachten" },
+      text: {
+        en: "Mentioning a colleague in a note should not make saving the note slower. The note is saved together with a small outbox record, and a scheduled job turns those records into notifications for each person a few minutes later.",
+        nl: "Een collega vermelden in een notitie mag het bewaren niet trager maken. De notitie wordt samen met een klein outbox-record bewaard, en een geplande taak zet die records enkele minuten later om in meldingen voor elke persoon.",
+      },
+    },
   ],
   gallery: [
     {
-      src: "/projects/beyond-talent-ats/candidate.jpg",
-      alt: {
-        en: "A candidate profile with upcoming follow-ups, the vacancy the candidate is linked to and its stage, and internal notes from the team.",
-        nl: "Een kandidaatprofiel met de komende opvolging, de gekoppelde vacature en de fase waarin de kandidaat zit, en interne notities van het team.",
-      },
-      caption: {
-        en: "A candidate’s profile: what needs to happen next, which vacancies they are in, and notes only the team can see.",
-        nl: "Het profiel van een kandidaat: wat er nog moet gebeuren, voor welke vacatures die loopt, en notities die alleen het team ziet.",
-      },
+      src: shot("agenda"),
+      alt: { en: "A week in the shared agenda, full of screenings, interviews, assessments and client meetings, each coloured by type.", nl: "Een week in de gedeelde agenda, vol screenings, interviews, assessments en klantafspraken, elk gekleurd per soort." },
+      caption: { en: "The shared agenda: every appointment is linked to a candidate, vacancy or client and coloured by type.", nl: "De gedeelde agenda: elke afspraak is gekoppeld aan een kandidaat, vacature of klant en gekleurd per soort." },
     },
     {
-      src: "/projects/beyond-talent-ats/planning.jpg",
-      alt: {
-        en: "A week view of the shared agenda with screenings, interviews and an assessment, coloured by type.",
-        nl: "Een weekoverzicht van de gedeelde agenda met screenings, interviews en een assessment, gekleurd per soort.",
-      },
-      caption: {
-        en: "The shared agenda, where every interview is linked to a candidate and a vacancy.",
-        nl: "De gedeelde agenda, waarin elk gesprek gekoppeld is aan een kandidaat en een vacature.",
-      },
+      src: shot("appointment"),
+      alt: { en: "The dialog for editing an appointment, with a day planner on the left and the type, location, candidate and vacancy on the right.", nl: "Het venster om een afspraak te bewerken, met een dagplanning links en het soort gesprek, de locatie, de kandidaat en de vacature rechts." },
+      caption: { en: "Planning an interview: drag it to a free moment, and the system checks the recruiter is available.", nl: "Een gesprek plannen: sleep het naar een vrij moment, en het systeem controleert of de recruiter beschikbaar is." },
     },
     {
-      src: "/projects/beyond-talent-ats/appointment.jpg",
-      alt: {
-        en: "The dialog for editing an appointment, with a day planner on the left and the type, location, candidate and vacancy on the right.",
-        nl: "Het venster om een afspraak te bewerken, met een dagplanning links en het soort gesprek, de locatie, de kandidaat en de vacature rechts.",
-      },
-      caption: {
-        en: "Planning an interview: drag it to a free moment, and the system checks the recruiter is available.",
-        nl: "Een gesprek plannen: sleep het naar een vrij moment, en het systeem controleert of de recruiter beschikbaar is.",
-      },
+      src: shot("candidate"),
+      alt: { en: "A candidate profile with upcoming interviews, three linked vacancies at different stages and six internal notes from the team.", nl: "Een kandidaatprofiel met komende gesprekken, drie gekoppelde vacatures in verschillende fases en zes interne notities van het team." },
+      caption: { en: "A candidate in three vacancies at once, each at its own stage, with the team’s notes beside them.", nl: "Een kandidaat in drie vacatures tegelijk, elk in een eigen fase, met de notities van het team ernaast." },
+    },
+    {
+      src: shot("activity"),
+      alt: { en: "A candidate’s timeline of notes, calls, emails and status changes, filtered by type, next to a contact summary.", nl: "De tijdlijn van een kandidaat met notities, telefoons, mails en statuswijzigingen, filterbaar per soort, naast een contactoverzicht." },
+      caption: { en: "The timeline: every call, email, note and status change, with when the candidate was last contacted.", nl: "De tijdlijn: elk telefoontje, elke mail, notitie en statuswijziging, met wanneer de kandidaat laatst gecontacteerd werd." },
+    },
+    {
+      src: shot("vacancy"),
+      alt: { en: "The candidates of one vacancy, each with their stage, next step, source and the date they were linked.", nl: "De kandidaten van één vacature, elk met hun fase, volgende stap, bron en de datum waarop ze gekoppeld werden." },
+      caption: { en: "One vacancy’s pipeline: where every candidate stands and what comes next.", nl: "De pipeline van één vacature: waar elke kandidaat staat en wat er volgt." },
+    },
+    {
+      src: shot("candidates"),
+      alt: { en: "The candidate list with name, contact details, source, status and how many vacancies and talent pools each candidate is in.", nl: "De kandidatenlijst met naam, contactgegevens, bron, status en in hoeveel vacatures en werfreserves elke kandidaat zit." },
+      caption: { en: "All candidates, with saved views for the work list, candidates in a procedure and recent activity.", nl: "Alle kandidaten, met vaste weergaven voor de werklijst, kandidaten in procedure en recente activiteit." },
+    },
+    {
+      src: shot("search"),
+      alt: { en: "The ⌘K search window over the dashboard, showing a matching candidate.", nl: "Het ⌘K-zoekvenster boven het overzicht, met een gevonden kandidaat." },
+      caption: { en: "⌘K finds any candidate, vacancy or company from anywhere in the app.", nl: "⌘K vindt vanuit elke pagina elke kandidaat, vacature of elk bedrijf." },
+    },
+    {
+      src: shot("company"),
+      alt: { en: "A client company with its profile, four contact people, documents and internal notes.", nl: "Een klantbedrijf met zijn profiel, vier contactpersonen, documenten en interne notities." },
+      caption: { en: "A client: its contacts and their roles, contracts and the team’s notes on the account.", nl: "Een klant: de contactpersonen en hun rol, contracten en de notities van het team over de klant." },
+    },
+    {
+      src: shot("talent-pool"),
+      alt: { en: "A talent pool of IT candidates with their profile, status, location and when they were last active.", nl: "Een werfreserve met IT-kandidaten, hun profiel, status, locatie en wanneer ze laatst actief waren." },
+      caption: { en: "Talent pools keep promising candidates at hand for the next vacancy that fits.", nl: "In de werfreserve blijven goede kandidaten bij de hand voor de volgende vacature die past." },
     },
   ],
 };

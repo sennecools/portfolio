@@ -13,7 +13,7 @@ export const project: ProjectSource = {
     en: "packctl updates the modpack on a Minecraft server. It replaces only the files that belong to the modpack, keeps everything the server owner added, and can roll an update back.",
     nl: "packctl werkt de modpack op een Minecraft-server bij. Het vervangt alleen de bestanden die bij de modpack horen, houdt alles bij wat de eigenaar zelf toevoegde, en kan een update terugdraaien.",
   },
-  role: { en: "Sole developer", nl: "Enige developer" },
+  role: { en: "Author and maintainer", nl: "Auteur en onderhouder" },
   year: "2026",
   status: { en: "Pre-1.0 · v0.1.0 released, MIT", nl: "Pre-1.0 · v0.1.0 uitgebracht, MIT" },
   stack: "Rust",

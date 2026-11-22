@@ -13,7 +13,7 @@ export const project: ProjectSource = {
     en: "The website of Beyond Talent, a Belgian recruitment agency. Companies read about its services, and candidates browse open vacancies and apply, in Dutch or English.",
     nl: "De website van Beyond Talent, een Belgisch rekrutatiebureau. Bedrijven lezen er over de diensten, en kandidaten bekijken openstaande vacatures en solliciteren, in het Nederlands of Engels.",
   },
-  role: { en: "Sole developer", nl: "Enige developer" },
+  role: { en: "Full-stack developer · freelance", nl: "Full-stack developer · freelance" },
   year: "2025–26",
   status: "Live",
   stack: "Next.js · Tailwind CSS",
