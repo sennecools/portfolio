@@ -96,8 +96,8 @@ visitors to email you directly instead of failing silently.
 
 The site is built for [Vercel](https://vercel.com): import the GitHub repository, keep the defaults and
 add `RESEND_API_KEY` (and optionally `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`) under Environment Variables.
-The site address used for RSS, the sitemap and social cards comes from `NEXT_PUBLIC_SITE_URL`, or, when that
-is not set, from the production address Vercel assigns (your custom domain once you add one).
+The site lives on <https://sennerd.com> (`www` redirects there). That address is used for RSS, the sitemap and
+social cards; set `NEXT_PUBLIC_SITE_URL` to override it.
 
 ## Design
 

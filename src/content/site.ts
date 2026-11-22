@@ -1,13 +1,6 @@
 import type { Localized } from "@/content/types";
 import type { Locale } from "@/i18n/config";
 
-function siteUrl(): string {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-  // Set by Vercel at build time: the custom domain once one is added, else <project>.vercel.app.
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  return "http://localhost:3000";
-}
-
 /**
  * Everything personal on the site lives here: facts that read the same in every language in
  * `site`, and the text per language in `siteText`.
@@ -15,11 +8,8 @@ function siteUrl(): string {
  */
 export const site = {
   name: "Senne Cools",
-  /**
-   * Used for RSS, the sitemap and social cards. Set NEXT_PUBLIC_SITE_URL once you have your own
-   * domain; until then a Vercel build uses the project's production address on its own.
-   */
-  url: siteUrl(),
+  /** Used for RSS, the sitemap and social cards. NEXT_PUBLIC_SITE_URL overrides it. */
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://sennerd.com",
   email: "sennecools2004@gmail.com",
 
   links: {
