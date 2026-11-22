@@ -28,12 +28,13 @@ export default async function HomePage({ params }: Props) {
 
   const { featured, strands, index } = groupByPlacement(getProjects(locale));
   // The CV links only switch on once the file actually exists in /public.
-  const hasCv = fs.existsSync(path.join(process.cwd(), "public", site.links.cv));
+  const cv = site.links.cv[locale];
+  const hasCv = fs.existsSync(path.join(process.cwd(), "public", cv));
 
   const links: SelectorLink[] = [
     { id: "github", label: "GitHub", display: display(site.links.github), href: site.links.github },
     { id: "linkedin", label: "LinkedIn", display: display(site.links.linkedin), href: site.links.linkedin },
-    ...(hasCv ? [{ id: "cv", label: "CV", display: "cv.pdf", href: site.links.cv }] : []),
+    ...(hasCv ? [{ id: "cv", label: "CV", display: cv.slice(1), href: cv }] : []),
   ];
 
   return (
@@ -205,7 +206,7 @@ export default async function HomePage({ params }: Props) {
               {t.home.about}
             </Rise>
             {hasCv && (
-              <a className="t-ui t-link head-row__link" href={site.links.cv} download {...rv("fade", { d0: 200 })}>
+              <a className="t-ui t-link head-row__link" href={cv} download {...rv("fade", { d0: 200 })}>
                 {t.home.downloadCv}
               </a>
             )}

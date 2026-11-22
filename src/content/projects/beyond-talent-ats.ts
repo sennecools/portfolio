@@ -19,6 +19,11 @@ export const project: ProjectSource = {
   stack: "Next.js · PostgreSQL",
   placement: "featured",
   links: [],
+  cover: "/projects/beyond-talent-ats/dashboard.jpg",
+  coverAlt: {
+    en: "The ATS dashboard with counts of active vacancies, clients and candidates, and a list of interviews planned for the coming weeks. Shown with fictitious demo data.",
+    nl: "Het overzicht van het ATS met tellers voor actieve vacatures, klanten en kandidaten, en een lijst met gesprekken in de komende weken. Getoond met fictieve demodata.",
+  },
   context: {
     en: [
       "A recruiter follows many candidates at once, each at a different stage for a different vacancy. The agency needed one place to keep track of all of it. Because the system stores CVs and personal details, it also has to follow the GDPR.",
@@ -51,5 +56,39 @@ export const project: ProjectSource = {
       },
     },
   ],
-  gallery: [],
+  gallery: [
+    {
+      src: "/projects/beyond-talent-ats/candidate.jpg",
+      alt: {
+        en: "A candidate profile with upcoming follow-ups, the vacancy the candidate is linked to and its stage, and internal notes from the team.",
+        nl: "Een kandidaatprofiel met de komende opvolging, de gekoppelde vacature en de fase waarin de kandidaat zit, en interne notities van het team.",
+      },
+      caption: {
+        en: "A candidate’s profile: what needs to happen next, which vacancies they are in, and notes only the team can see.",
+        nl: "Het profiel van een kandidaat: wat er nog moet gebeuren, voor welke vacatures die loopt, en notities die alleen het team ziet.",
+      },
+    },
+    {
+      src: "/projects/beyond-talent-ats/planning.jpg",
+      alt: {
+        en: "A week view of the shared agenda with screenings, interviews and an assessment, coloured by type.",
+        nl: "Een weekoverzicht van de gedeelde agenda met screenings, interviews en een assessment, gekleurd per soort.",
+      },
+      caption: {
+        en: "The shared agenda, where every interview is linked to a candidate and a vacancy.",
+        nl: "De gedeelde agenda, waarin elk gesprek gekoppeld is aan een kandidaat en een vacature.",
+      },
+    },
+    {
+      src: "/projects/beyond-talent-ats/appointment.jpg",
+      alt: {
+        en: "The dialog for editing an appointment, with a day planner on the left and the type, location, candidate and vacancy on the right.",
+        nl: "Het venster om een afspraak te bewerken, met een dagplanning links en het soort gesprek, de locatie, de kandidaat en de vacature rechts.",
+      },
+      caption: {
+        en: "Planning an interview: drag it to a free moment, and the system checks the recruiter is available.",
+        nl: "Een gesprek plannen: sleep het naar een vrij moment, en het systeem controleert of de recruiter beschikbaar is.",
+      },
+    },
+  ],
 };

@@ -80,7 +80,7 @@ as `{ en: "…", nl: "…" }`; a plain string reads the same in every language (
 | Project gallery   | any file in `public/`, set `src` on the gallery item          |
 | Post cover        | any file in `public/`, set `cover` in the post frontmatter     |
 | Your photos       | `public/about/hero.jpg` (hero) and `about.jpg` (About), set in `site.photos` |
-| CV                | `public/cv.pdf` — the CV links switch on once the file exists |
+| CV                | `public/senne-cools-cv-en.pdf` and `-nl.pdf`, built from `cv/` (see below) |
 
 Until an image is set, the design's orange plate is shown in its place.
 

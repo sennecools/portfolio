@@ -15,8 +15,8 @@ export const site = {
   links: {
     github: "https://github.com/sennecools",
     linkedin: "https://www.linkedin.com/in/senne-cools/",
-    /** Drop your CV at public/cv.pdf and the CV links switch on by themselves. */
-    cv: "/cv.pdf",
+    /** A CV per language in /public; the CV links switch on once the file exists. */
+    cv: { en: "/senne-cools-cv-en.pdf", nl: "/senne-cools-cv-nl.pdf" },
   },
 
   photos: {
